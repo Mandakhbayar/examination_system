@@ -46,6 +46,7 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer}>
+      <label className={styles.title}>Login</label>
       {error && <Alert message={error} type='error'/>}
       <div className={styles.formGroup}>
         <label htmlFor="email" className={styles.label}>Email:</label>
