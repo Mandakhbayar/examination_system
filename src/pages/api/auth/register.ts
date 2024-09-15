@@ -1,11 +1,8 @@
-// pages/api/login.ts
+// pages/api/register.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import pool from "@/config/db";
-import { User } from "../../../utils/types";
 import { RowDataPacket } from "mysql2";
-import { Constants } from "../../../utils/constants";
-import jwt from "jsonwebtoken";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,26 +18,22 @@ export default async function handler(
     }
 
     try {
-      const [rows] = await pool.query<RowDataPacket[]>(
+      const [existingUser] = await pool.query<RowDataPacket[]>(
         "SELECT * FROM users WHERE email = ?",
         [email]
       );
-      const user = rows[0] as User;
-
-      if (!user) {
-        return res.status(401).json({ message: "Invalid email or password" });
+      if (existingUser.length > 0) {
+        return res.status(409).json({ message: "User already exists" });
       }
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-      if (isMatch) {
-        const token = jwt.sign({ email }, Constants.ACCESS_TOKEN_KEY);
-        res
-          .status(200)
-          .json({ message: "Login successful", user: user, token: token });
-      } else {
-        res.status(401).json({ message: "Invalid email or password" });
-      }
+      await pool.query("INSERT INTO users (email, password) VALUES (?, ?)", [
+        email,
+        hashedPassword,
+      ]);
+
+      res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
       res.status(500).json({ message: "Server error", error });
     }
