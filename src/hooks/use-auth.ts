@@ -7,16 +7,14 @@ import { Routes } from "../utils/routes";
 
 const useAuth = () => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [userLoading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Check if user is already logged in (e.g., using local storage or cookies)
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      // Fetch user details or validate token
       axios
-        .get("/api/me", {
+        .get("/auth/protected", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
@@ -53,7 +51,7 @@ const useAuth = () => {
     router.push(Routes.auth.login); // Redirect to login page
   };
 
-  return { user, loading, login, logout };
+  return { user, userLoading, login, logout };
 };
 
 export default useAuth;

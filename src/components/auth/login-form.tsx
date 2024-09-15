@@ -5,6 +5,7 @@ import styles from '@/styles/auth.module.css';
 import Alert from '../ui/alert';
 import { useRouter } from "next/navigation";
 import { Routes } from '../../utils/routes';
+import useAuth from '../../hooks/use-auth';
 
 interface LoginFormType {
   email: string;
@@ -14,26 +15,15 @@ interface LoginFormType {
 export default function LoginForm() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormType>();
   const [error, setError] = useState<string | null>(null);
+  const {login} = useAuth();
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<LoginFormType> = async (data) => {
+  const onSubmit: SubmitHandler<LoginFormType> = async (data:LoginFormType) => {
     setError(null);
     
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        alert('Login successful!');
-      } else {
-        const result = await response.json();
-        setError(result.message || 'Something went wrong');
-      }
+      await login(data.email, data.password)
+      alert('Login successful!');
     } catch (err) {
       setError('Failed to login. Please try again.');
     }
