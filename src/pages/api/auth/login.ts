@@ -42,7 +42,7 @@ export default async function handler(
         res.status(401).json({ message: "Invalid email or password" });
       }
     } catch (error) {
-      res.status(500).json({ message: "Server error", error });
+      res.status(500).json({ message: "Server internal error", error });
     }
   } else {
     res.setHeader("Allow", ["POST"]);

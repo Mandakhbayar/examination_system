@@ -6,6 +6,8 @@ export interface User {
   password: string;
 }
 
+export type AlertType = "success" | "error" | "warning" | "info";
+
 export interface CustomNextApiRequest extends NextApiRequest {
   user?: {
     email: string;

@@ -5,6 +5,7 @@ import styles from "@/styles/auth.module.css";
 import Alert from "../ui/alert";
 import { useRouter } from "next/navigation";
 import { Routes } from "../../utils/routes";
+import { AlertType } from "../../utils/types";
 
 interface RegisterFormType {
   email: string;
@@ -18,14 +19,16 @@ export default function RegisterForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterFormType>();
-  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<AlertType | undefined>(undefined);
   const router = useRouter();
 
   const onSubmit: SubmitHandler<RegisterFormType> = async (data) => {
-    setError(null);
+    setMessage(null);
+    setAlertType("error");
 
     if (data.password !== data.confirmPassword) {
-      setError("Passwords do not match");
+      setMessage("Passwords do not match");
       return;
     }
 
@@ -39,14 +42,15 @@ export default function RegisterForm() {
       });
 
       if (response.ok) {
-        alert("Registration successful!");
-        router.push(Routes.auth.login); // Redirect to login or another page after successful registration
+        setAlertType("success");
+        setMessage("Registration successful!");
+        router.push(Routes.auth.login);
       } else {
         const result = await response.json();
-        setError(result.message || "Something went wrong");
+        setMessage(result.message || "Something went wrong");
       }
     } catch (err) {
-      setError("Failed to register. Please try again.");
+      setMessage("Failed to register. Please try again.");
     }
   };
 
@@ -58,7 +62,7 @@ export default function RegisterForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer}>
       <label className={styles.title}>Register</label>
-      {error && <Alert message={error} type="error" />}
+      {message && <Alert message={message} type={alertType} />}
 
       <div className={styles.formGroup}>
         <label htmlFor="email" className={styles.label}>

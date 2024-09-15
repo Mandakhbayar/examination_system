@@ -6,6 +6,7 @@ import Alert from '../ui/alert';
 import { useRouter } from "next/navigation";
 import { Routes } from '../../utils/routes';
 import useAuth from '../../hooks/use-auth';
+import { AlertType } from '../../utils/types';
 
 interface LoginFormType {
   email: string;
@@ -14,18 +15,21 @@ interface LoginFormType {
 
 export default function LoginForm() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormType>();
-  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<AlertType | undefined>(undefined);
   const {login} = useAuth();
   const router = useRouter();
 
   const onSubmit: SubmitHandler<LoginFormType> = async (data:LoginFormType) => {
-    setError(null);
+    setMessage(null);
     
     try {
       await login(data.email, data.password)
-      alert('Login successful!');
+      setAlertType("success");
+      setMessage('Login successful!');
     } catch (err) {
-      setError('Failed to login. Please try again.');
+      setAlertType("error");
+      setMessage('Failed to login. Please try again.');
     }
   };
 
@@ -37,7 +41,7 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer}>
       <label className={styles.title}>Login</label>
-      {error && <Alert message={error} type='error'/>}
+      {message && <Alert message={message} type={alertType}/>}
       <div className={styles.formGroup}>
         <label htmlFor="email" className={styles.label}>Email:</label>
         <input

@@ -10,6 +10,7 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     const { email, password } = req.body;
+    console.log("Database URL:", process.env.DATABASE_URL);
 
     if (!email || !password) {
       return res
@@ -35,7 +36,8 @@ export default async function handler(
 
       res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
-      res.status(500).json({ message: "Server error", error });
+      console.log(error);
+      res.status(500).json({ message: "Server internal error", error });
     }
   } else {
     res.setHeader("Allow", ["POST"]);
