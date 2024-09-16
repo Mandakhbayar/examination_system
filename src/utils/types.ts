@@ -22,3 +22,15 @@ export interface Lesson {
   description: string;
   image_url: string;
 }
+
+export type Answer = {
+  id: number;
+  text: string;
+  isCorrect: boolean;
+};
+
+export type Question = {
+  id: number;
+  text: string;
+  answers: Answer[];
+};
