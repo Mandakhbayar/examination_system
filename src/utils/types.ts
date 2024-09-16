@@ -34,3 +34,5 @@ export type Question = {
   text: string;
   answers: Answer[];
 };
+
+export type PageStatusType = "start" | "pending" | "end";

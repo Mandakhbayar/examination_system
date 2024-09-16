@@ -1,7 +1,5 @@
-import Link from 'next/link';
 import useAuth from '@/hooks/use-auth';
-import { Routes } from '../../utils/routes';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
 
 export default function Header() {
@@ -11,6 +9,10 @@ export default function Header() {
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
+
+  useEffect(()=>{
+    setDropdownOpen(false);
+  },[user])
 
   return (
     <header className="bg-black text-white py-4 px-6 shadow-lg">
@@ -39,11 +41,7 @@ export default function Header() {
                 </div>
               )}
             </div>
-          ) : (
-            <Link href={Routes.auth.login} className="text-white">
-              Login
-            </Link>
-          )}
+          ) : null}
         </nav>
       </div>
     </header>

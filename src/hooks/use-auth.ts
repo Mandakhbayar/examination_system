@@ -23,13 +23,13 @@ const useAuth = () => {
           setUser(response.data.user);
         })
         .catch(() => {
-          // logout();
+          logout();
         })
         .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
-  }, []);
+  }, [router]);
 
   const login = async (email: string, password: string) => {
     try {
