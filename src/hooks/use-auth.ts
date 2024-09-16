@@ -1,27 +1,29 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import axiosInterceptorInstance from "../config/api-interceptor";
 import { Constants } from "../utils/constants";
 import { Routes } from "../utils/routes";
+import { User } from "../utils/types";
+import axiosInterceptorInstance from "../config/api-interceptor";
 
 const useAuth = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [userLoading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem(Constants.ACCESS_TOKEN_KEY);
+    console.log("TOKEN hook:" + token);
+
     if (token) {
       axiosInterceptorInstance
-        .get("/auth/protected", {
+        .get("/auth/check", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
-          setUser(response.data);
+          setUser(response.data.user);
         })
         .catch(() => {
-          localStorage.removeItem(Constants.ACCESS_TOKEN_KEY);
-          setUser(null);
+          // logout();
         })
         .finally(() => setLoading(false));
     } else {
@@ -35,8 +37,9 @@ const useAuth = () => {
         email,
         password,
       });
-      localStorage.setItem(Constants.ACCESS_TOKEN_KEY, response.data.token);
-      setUser(response.data.user);
+      const { token, user } = response.data;
+      localStorage.setItem(Constants.ACCESS_TOKEN_KEY, token);
+      setUser(user);
       router.push(Routes.private.lessons);
     } catch (error) {
       console.error("Login error:", error);
@@ -47,7 +50,7 @@ const useAuth = () => {
   const logout = () => {
     localStorage.removeItem(Constants.ACCESS_TOKEN_KEY);
     setUser(null);
-    router.push(Routes.auth.login); // Redirect to login page
+    router.push(Routes.auth.login);
   };
 
   return { user, userLoading, login, logout };

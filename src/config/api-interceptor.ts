@@ -9,7 +9,7 @@ export const ERROR_CODES = {
 };
 
 const axiosInterceptorInstance = axios.create({
-  baseURL: `${process.env.BASE_URL}/api`, // Replace with your API base URL
+  baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}/api`, // Replace with your API base URL
 });
 
 // Request interceptor
