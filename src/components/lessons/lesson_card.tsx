@@ -18,7 +18,7 @@ export default function LessonCard({ lesson }: { lesson: Lesson }) {
           />
         </div>
         <div className="p-4">
-          <h2 className="text-xl font-semibold mb-2">{lesson.title}</h2>
+          <h2 className="text-xl font-semibold text-black mb-2">{lesson.title}</h2>
           <p className="text-gray-700 mb-4">{lesson.description}</p>
         </div>
       </div>
