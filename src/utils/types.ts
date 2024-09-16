@@ -15,3 +15,10 @@ export interface CustomNextApiRequest extends NextApiRequest {
     exp: number;
   };
 }
+
+export interface Lesson {
+  id: string;
+  title: string;
+  description: string;
+  image_url: string;
+}

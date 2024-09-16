@@ -6,6 +6,8 @@ export const Routes = {
   public: {
     home: "/",
   },
-  private: {},
+  private: {
+    lessons: "/lessons",
+  },
   admin: {},
 };

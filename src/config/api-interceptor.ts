@@ -9,15 +9,17 @@ export const ERROR_CODES = {
 };
 
 const axiosInterceptorInstance = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}/api`, // Replace with your API base URL
+  baseURL: `${process.env.BASE_URL}/api`, // Replace with your API base URL
 });
 
 // Request interceptor
 axiosInterceptorInstance.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem(Constants.ACCESS_TOKEN_KEY);
-    if (accessToken) {
-      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    if (typeof window !== "undefined") {
+      const accessToken = localStorage.getItem(Constants.ACCESS_TOKEN_KEY);
+      if (accessToken) {
+        config.headers["Authorization"] = `Bearer ${accessToken}`;
+      }
     }
     return config;
   },

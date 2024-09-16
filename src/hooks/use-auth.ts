@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import axios from "axios"; // Or any HTTP client
 import axiosInterceptorInstance from "../config/api-interceptor";
 import { Constants } from "../utils/constants";
 import { Routes } from "../utils/routes";
@@ -13,7 +12,7 @@ const useAuth = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      axios
+      axiosInterceptorInstance
         .get("/auth/protected", {
           headers: { Authorization: `Bearer ${token}` },
         })
@@ -38,7 +37,7 @@ const useAuth = () => {
       });
       localStorage.setItem(Constants.ACCESS_TOKEN_KEY, response.data.token);
       setUser(response.data.user);
-      router.push(Routes.auth.login);
+      router.push(Routes.private.lessons);
     } catch (error) {
       console.error("Login error:", error);
       throw error;
