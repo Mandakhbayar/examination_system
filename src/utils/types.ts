@@ -35,4 +35,4 @@ export type Question = {
   answers: Answer[];
 };
 
-export type PageStatusType = "start" | "pending" | "end";
+export type PageStatusType = "start" | "pending" | "finished";

@@ -38,14 +38,17 @@ export default function QuestionCard({
             <AnswerCard
               answer={answer}
               type={
-                status != "end"
+                status != "finished"
                   ? isAnswerSelectedFunction(question.id, answer.id)
                     ? "selected"
                     : "default"
-                  : isAnswerSelectedFunction(question.id, answer.id) &&
-                    answer.isCorrect
+                  : isAnswerSelectedFunction(question.id, answer.id)
+                  ? answer.isCorrect
+                    ? "success"
+                    : "error"
+                  : answer.isCorrect
                   ? "success"
-                  : "error"
+                  : "default"
               }
             />
           </div>

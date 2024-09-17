@@ -1,9 +1,10 @@
 import { GetServerSideProps } from "next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PageStatusType, Question } from "../../../utils/types";
 import axiosInterceptorInstance from "../../../config/api-interceptor";
 import QuestionCard from "../../../components/lessons/question_card";
 import StartView from "../../../components/lessons/start_view";
+import Timer from "../../../components/lessons/fixed_timer";
 
 interface QuestionsPageProps {
   initialQuestions: Question[];
@@ -20,13 +21,27 @@ export default function QuestionsPage({
   const [questions, setQuestions] = useState<Question[]>(initialQuestions);
   const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswer[]>([]);
   const [pageStatus, setPageStatus] = useState<PageStatusType>("start");
+  const [timeLeft, setTimeLeft] = useState<number>(600); // 10 minutes timer (600 seconds)
+
+  useEffect(() => {
+    if (pageStatus === "pending" && timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+      return () => clearInterval(timer); // Clear interval on component unmount
+    }
+
+    if (timeLeft === 0) {
+      setPageStatus("finished"); // Exam finishes when time runs out
+    }
+  }, [pageStatus, timeLeft]);
 
   const handleAnswerSelect = (
     questionId: number,
     answerId: number,
     isCorrect: boolean
   ) => {
-    if (pageStatus == "pending") {
+    if (pageStatus === "pending") {
       setSelectedAnswers((prevSelected) => {
         const newSelected = prevSelected.filter(
           (answer) => answer.questionId !== questionId
@@ -45,11 +60,13 @@ export default function QuestionsPage({
 
   const examStart = () => {
     setPageStatus("pending");
+    setTimeLeft(600);
+  };
+
+  if (pageStatus === "start") {
+    return <StartView startFunction={examStart} />;
   }
 
-  if(pageStatus == "start") {
-    return <StartView startFunction={examStart} />
-  }
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6 text-black">Questions</h1>
@@ -65,6 +82,7 @@ export default function QuestionsPage({
           />
         ))}
       </div>
+      <Timer timeLeft={timeLeft}/>
     </div>
   );
 }
