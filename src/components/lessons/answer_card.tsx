@@ -10,12 +10,13 @@ const typeClasses = {
     selected: 'bg-black text-white'
   };
 
-export default function AnswerCard({answer, type="default"}: {answer:Answer, type?: Type}) {
+export default function AnswerCard({answer, type="default", index}: {answer:Answer, type?: Type, index: number}) {
   return (
     <div
       key={answer.id}
-      className={`p-4 rounded-lg ${typeClasses[type]} border border-gray-300`}
+      className={`p-4 rounded-lg ${typeClasses[type]} border border-gray-300 break-words whitespace-normal`}
     >
+       <span className="text-lg font-bold mr-2">{String.fromCharCode(97 + index)+")"}</span>
       {answer.text}
     </div>
   );

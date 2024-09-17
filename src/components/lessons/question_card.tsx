@@ -28,7 +28,7 @@ export default function QuestionCard({
       </h1>
       <h2 className="text-xl font-semibold mb-4 text-black">{question.text}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {question.answers.map((answer) => (
+        {question.answers.map((answer, indexAnswer) => (
           <div
             key={answer.id}
             onClick={() =>
@@ -37,6 +37,7 @@ export default function QuestionCard({
           >
             <AnswerCard
               answer={answer}
+              index={indexAnswer}
               type={
                 status != "finished"
                   ? isAnswerSelectedFunction(question.id, answer.id)

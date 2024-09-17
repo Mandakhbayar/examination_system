@@ -19,13 +19,14 @@ interface SelectedAnswer {
 
 export default function QuestionsPage({
   initialQuestions,
-  lesson
+  lesson,
 }: QuestionsPageProps) {
   const [questions] = useState<Question[]>(initialQuestions);
   const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswer[]>([]);
   const [pageStatus, setPageStatus] = useState<PageStatusType>("start");
   const [timeLeft, setTimeLeft] = useState<number>(600);
-  const [isShowQuestionsResult, setIsShowQuestionsResult] = useState<boolean>(false);
+  const [isShowQuestionsResult, setIsShowQuestionsResult] =
+    useState<boolean>(false);
   const [dialog, setDialog] = useState<{
     type: DialogType;
     message: string;
@@ -85,21 +86,25 @@ export default function QuestionsPage({
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="flex text-2xl  mb-6 text-black">Lesson: <p className="font-bold ml-2">{lesson?.title}</p></h1>
+      <h1 className="flex text-2xl  mb-6 text-black">
+        Lesson: <p className="font-bold ml-2">{lesson?.title}</p>
+      </h1>
 
       {pageStatus === "start" && <StartView startFunction={examStart} />}
-      {(pageStatus === "pending" || isShowQuestionsResult == true ) && (
-        <QuestionsView
-          questions={questions}
-          isAnswerSelectedFunction={isAnswerSelected}
-          status={pageStatus}
-          selectFunction={handleAnswerSelect}
-        />
+      {(pageStatus === "pending" || isShowQuestionsResult == true) && (
+        <>
+          <QuestionsView
+            questions={questions}
+            isAnswerSelectedFunction={isAnswerSelected}
+            status={pageStatus}
+            selectFunction={handleAnswerSelect}
+          />
+          <Timer timeLeft={timeLeft} />
+        </>
       )}
-      {(pageStatus === "finished" && isShowQuestionsResult == false) && (
+      {pageStatus === "finished" && isShowQuestionsResult == false && (
         <div className="text-center text-lg font-bold">Exam Finished</div>
       )}
-      <Timer timeLeft={timeLeft} />
       {dialog && (
         <Dialog
           type={dialog.type}
@@ -123,7 +128,7 @@ export const getServerSideProps: GetServerSideProps<
     return {
       props: {
         initialQuestions,
-        lesson
+        lesson,
       },
     };
   } catch (error) {
@@ -131,7 +136,7 @@ export const getServerSideProps: GetServerSideProps<
     return {
       props: {
         initialQuestions: [],
-        lesson: null
+        lesson: null,
       },
     };
   }
