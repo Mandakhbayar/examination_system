@@ -1,14 +1,15 @@
 import { GetServerSideProps } from "next";
 import { useState, useEffect } from "react";
-import { PageStatusType, Question } from "../../../utils/types";
+import { Lesson, PageStatusType, Question } from "../../../utils/types";
 import axiosInterceptorInstance from "../../../config/api-interceptor";
-import QuestionCard from "../../../components/lessons/question_card";
 import StartView from "../../../components/lessons/start_view";
 import Timer from "../../../components/lessons/fixed_timer";
 import Dialog, { DialogType } from "../../../components/ui/dialog";
+import QuestionsView from "../../../components/lessons/questions_view";
 
 interface QuestionsPageProps {
   initialQuestions: Question[];
+  lesson: Lesson | null;
 }
 
 interface SelectedAnswer {
@@ -18,12 +19,17 @@ interface SelectedAnswer {
 
 export default function QuestionsPage({
   initialQuestions,
+  lesson
 }: QuestionsPageProps) {
   const [questions] = useState<Question[]>(initialQuestions);
   const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswer[]>([]);
   const [pageStatus, setPageStatus] = useState<PageStatusType>("start");
   const [timeLeft, setTimeLeft] = useState<number>(600);
-  const [dialog, setDialog] = useState<{ type: DialogType; message: string } | null>(null);
+  const [isShowQuestionsResult, setIsShowQuestionsResult] = useState<boolean>(false);
+  const [dialog, setDialog] = useState<{
+    type: DialogType;
+    message: string;
+  } | null>(null);
 
   const showDialog = (type: DialogType, message: string) => {
     setDialog({ type, message });
@@ -38,7 +44,7 @@ export default function QuestionsPage({
       const timer = setInterval(() => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
-      return () => clearInterval(timer); 
+      return () => clearInterval(timer);
     }
 
     if (timeLeft === 0) {
@@ -69,40 +75,31 @@ export default function QuestionsPage({
   };
 
   const examStart = () => {
-    if(questions && questions.length > 0){
+    if (questions && questions.length > 0) {
       setPageStatus("pending");
       setTimeLeft(600);
     } else {
-      showDialog("error", "Server internal error")
+      showDialog("error", "Server internal error");
     }
   };
 
-  if (pageStatus === "start") {
-    return <>{dialog && (
-      <Dialog
-        type={dialog.type}
-        message={dialog.message}
-        onClose={closeDialog}
-      />
-    )}<StartView startFunction={examStart} /></>;
-  }
-
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6 text-black">Questions</h1>
-      <div className="space-y-4">
-        {questions.map((question, index) => (
-          <QuestionCard
-            key={index}
-            index={index}
-            question={question}
-            selectFunction={handleAnswerSelect}
-            isAnswerSelectedFunction={isAnswerSelected}
-            status={pageStatus}
-          />
-        ))}
-      </div>
-      <Timer timeLeft={timeLeft}/>
+      <h1 className="flex text-2xl  mb-6 text-black">Lesson: <p className="font-bold ml-2">{lesson?.title}</p></h1>
+
+      {pageStatus === "start" && <StartView startFunction={examStart} />}
+      {(pageStatus === "pending" || isShowQuestionsResult == true ) && (
+        <QuestionsView
+          questions={questions}
+          isAnswerSelectedFunction={isAnswerSelected}
+          status={pageStatus}
+          selectFunction={handleAnswerSelect}
+        />
+      )}
+      {(pageStatus === "finished" && isShowQuestionsResult == false) && (
+        <div className="text-center text-lg font-bold">Exam Finished</div>
+      )}
+      <Timer timeLeft={timeLeft} />
       {dialog && (
         <Dialog
           type={dialog.type}
@@ -120,11 +117,13 @@ export const getServerSideProps: GetServerSideProps<
   const { id } = context.query;
   try {
     const response = await axiosInterceptorInstance.get(`/lessons/${id}`);
-    const initialQuestions: Question[] = response.data;
+    const initialQuestions: Question[] = response.data.questions;
+    const lesson: Lesson = response.data.lesson;
 
     return {
       props: {
         initialQuestions,
+        lesson
       },
     };
   } catch (error) {
@@ -132,6 +131,7 @@ export const getServerSideProps: GetServerSideProps<
     return {
       props: {
         initialQuestions: [],
+        lesson: null
       },
     };
   }

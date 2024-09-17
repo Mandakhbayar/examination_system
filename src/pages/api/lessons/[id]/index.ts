@@ -17,6 +17,23 @@ export default async function handler(
 ) {
   try {
     const lessonId = req.query.id as string;
+
+    const [lessonRows] = await pool.query(
+      "SELECT id, title, description, image_url FROM lessons WHERE id = ?",
+      [lessonId]
+    );
+
+    if (
+      !Array.isArray(lessonRows) ||
+      lessonRows.length === 0 ||
+      !lessonRows[0]
+    ) {
+      res.status(404).json({ error: "Lesson not found" });
+      return;
+    }
+
+    const lesson = lessonRows[0];
+
     const [rows] = await pool.query<RowDataPacket[]>(
       `
       SELECT q.id AS question_id, q.text AS question_text,
@@ -70,7 +87,7 @@ export default async function handler(
     });
 
     const questions = Object.values(questionsMap);
-    res.status(200).json(questions);
+    res.status(200).json({ lesson: lesson, questions: questions });
   } catch (error) {
     console.error("Error fetching questions and answers:", error);
     res.status(500).json({ message: "Server error", error });
