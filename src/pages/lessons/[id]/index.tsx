@@ -19,7 +19,7 @@ interface SelectedAnswer {
 export default function QuestionsPage({
   initialQuestions,
 }: QuestionsPageProps) {
-  const [questions, setQuestions] = useState<Question[]>(initialQuestions);
+  const [questions] = useState<Question[]>(initialQuestions);
   const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswer[]>([]);
   const [pageStatus, setPageStatus] = useState<PageStatusType>("start");
   const [timeLeft, setTimeLeft] = useState<number>(600);
