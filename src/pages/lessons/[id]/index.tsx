@@ -5,6 +5,7 @@ import axiosInterceptorInstance from "../../../config/api-interceptor";
 import QuestionCard from "../../../components/lessons/question_card";
 import StartView from "../../../components/lessons/start_view";
 import Timer from "../../../components/lessons/fixed_timer";
+import Dialog, { DialogType } from "../../../components/ui/dialog";
 
 interface QuestionsPageProps {
   initialQuestions: Question[];
@@ -21,18 +22,27 @@ export default function QuestionsPage({
   const [questions, setQuestions] = useState<Question[]>(initialQuestions);
   const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswer[]>([]);
   const [pageStatus, setPageStatus] = useState<PageStatusType>("start");
-  const [timeLeft, setTimeLeft] = useState<number>(600); // 10 minutes timer (600 seconds)
+  const [timeLeft, setTimeLeft] = useState<number>(600);
+  const [dialog, setDialog] = useState<{ type: DialogType; message: string } | null>(null);
+
+  const showDialog = (type: DialogType, message: string) => {
+    setDialog({ type, message });
+  };
+
+  const closeDialog = () => {
+    setDialog(null);
+  };
 
   useEffect(() => {
     if (pageStatus === "pending" && timeLeft > 0) {
       const timer = setInterval(() => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
-      return () => clearInterval(timer); // Clear interval on component unmount
+      return () => clearInterval(timer); 
     }
 
     if (timeLeft === 0) {
-      setPageStatus("finished"); // Exam finishes when time runs out
+      setPageStatus("finished");
     }
   }, [pageStatus, timeLeft]);
 
@@ -59,12 +69,22 @@ export default function QuestionsPage({
   };
 
   const examStart = () => {
-    setPageStatus("pending");
-    setTimeLeft(600);
+    if(questions && questions.length > 0){
+      setPageStatus("pending");
+      setTimeLeft(600);
+    } else {
+      showDialog("error", "Server internal error")
+    }
   };
 
   if (pageStatus === "start") {
-    return <StartView startFunction={examStart} />;
+    return <>{dialog && (
+      <Dialog
+        type={dialog.type}
+        message={dialog.message}
+        onClose={closeDialog}
+      />
+    )}<StartView startFunction={examStart} /></>;
   }
 
   return (
@@ -83,6 +103,13 @@ export default function QuestionsPage({
         ))}
       </div>
       <Timer timeLeft={timeLeft}/>
+      {dialog && (
+        <Dialog
+          type={dialog.type}
+          message={dialog.message}
+          onClose={closeDialog}
+        />
+      )}
     </div>
   );
 }
