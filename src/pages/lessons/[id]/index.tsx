@@ -199,7 +199,7 @@ export default function QuestionsPage() {
           questions={questions}
           selectedAnswers={selectedAnswers}
           onShowQuestionResult={ShowQuestionResult}
-          onBack={handleBack}
+          onBack={()=>{router.back()}}
           timeTaken={timeTaken} // Pass time taken to FinishedView
         />
       )}
