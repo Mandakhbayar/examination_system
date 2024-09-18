@@ -1,3 +1,5 @@
+import CustomButton from "../ui/button";
+
 export default function StartView({startFunction}:{startFunction:VoidFunction}) {
     return (
       <div className="flex justify-center min-h-screen bg-gray-100">
@@ -7,12 +9,7 @@ export default function StartView({startFunction}:{startFunction:VoidFunction}) 
             Click below to start!
           </p>
           <div className="flex justify-center">
-            <button
-              onClick={startFunction}
-              className="bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors duration-200"
-            >
-              Start Exam
-            </button>
+            <CustomButton label="Start Test" type="black" onClick={startFunction}/>
           </div>
         </div>
       </div>

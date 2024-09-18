@@ -1,4 +1,5 @@
 import { ButtonType } from "../../utils/types";
+import styles from '@/styles/auth.module.css';
 
 interface ButtonProps {
   label: string;
@@ -9,8 +10,9 @@ interface ButtonProps {
 const buttonTypeStyles = {
   default: "bg-gray-300 hover:bg-gray-400 text-black",
   success: "bg-green-500 hover:bg-green-400 text-white",
-  black: "bg-black hover:bg-gray-700 text-white",
-  white: "bg-white hover:bg-gray-300 text-black",
+  next: "bg-black hover:bg-gray-700 text-white",
+  black: styles.submitButton,
+  white: styles.secondButton,
 };
 
 export default function CustomButton({ label, onClick, type }: ButtonProps) {
@@ -18,7 +20,7 @@ export default function CustomButton({ label, onClick, type }: ButtonProps) {
 
   return (
     <button
-      className={`px-4 py-2 rounded transition-colors duration-300 ${buttonColor}`}
+      className={`px-6 py-2 rounded transition-colors duration-300 ${buttonColor}`}
       onClick={onClick}
     >
       {label}

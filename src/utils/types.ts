@@ -51,4 +51,4 @@ export type DialogDetailType = {
   onComplete?: () => void;
 };
 
-export type ButtonType = "default" | "success" | "black" | "white";
+export type ButtonType = "default" | "success" | "next" | "black" | "white";

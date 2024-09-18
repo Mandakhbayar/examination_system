@@ -143,7 +143,7 @@ export default function QuestionsPage({
               />
             ) : (
               <CustomButton
-                type="black"
+                type="next"
                 label="Result"
                 onClick={handleResult}
               />
@@ -156,6 +156,7 @@ export default function QuestionsPage({
           questions={questions}
           selectedAnswers={selectedAnswers}
           onShowQuestionResult={ShowQuestionResult}
+          onBack={handleBack}
         />
       )}
       {dialog && (
