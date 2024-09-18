@@ -1,12 +1,6 @@
 import React from "react";
+import { DialogDetailType } from "../../utils/types";
 
-export type DialogType = "info" | "warning" | "error" | "success";
-
-interface DialogProps {
-  type: DialogType;
-  message: string;
-  onClose: () => void;
-}
 
 const dialogTypeStyles = {
   info: {
@@ -43,13 +37,22 @@ const dialogTypeStyles = {
   },
 };
 
-const Dialog: React.FC<DialogProps> = ({ type, message, onClose }) => {
-  const { bgColor, borderColor, textColor, titleColor, icon, title } = dialogTypeStyles[type];
+const Dialog: React.FC<DialogDetailType> = ({
+  type,
+  message,
+  onClose,
+  onComplete,
+}) => {
+  const { bgColor, borderColor, textColor, titleColor, icon, title } =
+    dialogTypeStyles[type];
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-70" onClick={onClose}></div>
+      <div
+        className="absolute inset-0 bg-black bg-opacity-70"
+        onClick={onClose}
+      ></div>
 
       {/* Dialog Box */}
       <div
@@ -69,11 +72,19 @@ const Dialog: React.FC<DialogProps> = ({ type, message, onClose }) => {
         {/* Close Button */}
         <div className="mt-6 text-right">
           <button
-            className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition-colors duration-300"
+            className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 transition-colors duration-300"
             onClick={onClose}
           >
             Close
           </button>
+          {onComplete && (
+            <button
+              className="px-4 py-2 bg-gray-700 ml-2 text-white rounded hover:bg-gray-600 transition-colors duration-300"
+              onClick={onComplete}
+            >
+              OK
+            </button>
+          )}
         </div>
       </div>
     </div>

@@ -3,4 +3,5 @@ export const Constants = {
   EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   ACCESS_TOKEN_KEY: "ACCESS_TOKEN_KEY",
   SECRET_KEY: "SECRET_KEY",
+  EXAM_DEFAULT_TIME: 10,
 };

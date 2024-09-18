@@ -36,3 +36,17 @@ export type Question = {
 };
 
 export type PageStatusType = "start" | "pending" | "finished";
+
+export interface SelectedAnswer {
+  questionId: number;
+  answerId: number;
+}
+
+export type DialogType = "info" | "warning" | "error" | "success";
+
+export type DialogDetailType = {
+  type: DialogType;
+  message: string;
+  onClose: () => void;
+  onComplete?: () => void;
+};
