@@ -50,3 +50,5 @@ export type DialogDetailType = {
   onClose: () => void;
   onComplete?: () => void;
 };
+
+export type ButtonType = "default" | "success" | "black" | "white";

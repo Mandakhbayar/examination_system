@@ -1,12 +1,13 @@
 // components/LoginForm.tsx
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '@/styles/auth.module.css';
 import Alert from '../ui/alert';
 import { useRouter } from "next/navigation";
 import { Routes } from '../../utils/routes';
 import useAuth from '../../hooks/use-auth';
 import { AlertType } from '../../utils/types';
+import { DefaultStrings } from '../../utils/strings';
 
 interface LoginFormType {
   email: string;
@@ -17,7 +18,7 @@ export default function LoginForm() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormType>();
   const [message, setMessage] = useState<string | null>(null);
   const [alertType, setAlertType] = useState<AlertType | undefined>(undefined);
-  const {login} = useAuth();
+  const {login, user} = useAuth();
   const router = useRouter();
 
   const onSubmit: SubmitHandler<LoginFormType> = async (data:LoginFormType) => {
@@ -38,6 +39,12 @@ export default function LoginForm() {
     router.push(Routes.auth.register);
   };
 
+  useEffect(()=>{
+    if(user){
+      router.push(Routes.private.lessons);
+    }
+  },[user])
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer}>
       <label className={styles.title}>Login</label>
@@ -48,6 +55,7 @@ export default function LoginForm() {
           id="email"
           type="email"
           className={styles.input}
+          placeholder={DefaultStrings.EMAIL_INPUT_PLACEHOLDER}
           {...register('email', { required: 'Email is required' })}
         />
         {errors.email && <p className={styles.errorMessage}>{errors.email.message}</p>}
@@ -59,13 +67,14 @@ export default function LoginForm() {
           id="password"
           type="password"
           className={styles.input}
+          placeholder={DefaultStrings.PASSWORD_INPUT_PLACEHOLDER}
           {...register('password', { required: 'Password is required' })}
         />
         {errors.password && <p className={styles.errorMessage}>{errors.password.message}</p>}
       </div>
       
       <button type="submit" className={styles.submitButton}>Login</button>
-      <button onClick={handleRegisterClick} className={styles.secondButton}>Register</button>
+      <button onClick={handleRegisterClick} className={styles.secondButton}>Create new account</button>
     </form>
   );
 };

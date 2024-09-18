@@ -16,7 +16,7 @@ export default function Timer({ timeLeft }: { timeLeft: number }) {
 
   return (
     <div
-      className={`fixed bottom-4 right-4 text-white font-bold p-3 rounded shadow-lg ${getTimeColor()}`}
+      className={` text-white font-bold p-3 rounded shadow-lg ${getTimeColor()}`}
     >
       Time Left: {formatTime(timeLeft)}
     </div>

@@ -13,7 +13,9 @@ import Dialog from "../../../components/ui/dialog";
 import QuestionsView from "../../../components/lessons/questions_view";
 import { Constants } from "../../../utils/constants";
 import FinishedView from "../../../components/lessons/finished_view";
-import { DialogDetailType } from '../../../utils/types';
+import { DialogDetailType } from "../../../utils/types";
+import CustomButton from "../../../components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface QuestionsPageProps {
   initialQuestions: Question[];
@@ -24,6 +26,7 @@ export default function QuestionsPage({
   initialQuestions,
   lesson,
 }: QuestionsPageProps) {
+  const router = useRouter();
   const [questions] = useState<Question[]>(initialQuestions);
   const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswer[]>([]);
   const [pageStatus, setPageStatus] = useState<PageStatusType>("start");
@@ -41,17 +44,37 @@ export default function QuestionsPage({
     }
 
     if (timeLeft === 0) {
-      handleFinish()
+      setPageStatus("finished");
     }
   }, [pageStatus, timeLeft]);
 
   const handleFinish = () => {
-    setPageStatus("finished");
+    setDialog({
+      type: "info",
+      message: "Are you sure you want to complete the Test?",
+      onClose: () => {
+        setDialog(null);
+      },
+      onComplete: () => {
+        setPageStatus("finished");
+        setDialog(null);
+      }
+    });
+  };
+
+  const handleResult = () => {
+    setIsShowQuestionsResult(false);
   };
 
   const handleBack = () => {
-    setDialog({type:"error", message: "test", onClose: ()=>{}})
-  }
+    setDialog({
+      type: "info",
+      message: "Are you sure you want to go back?",
+      onClose: () => {
+        router.back();
+      },
+    });
+  };
 
   const handleAnswerSelect = (
     questionId: number,
@@ -80,7 +103,13 @@ export default function QuestionsPage({
       setPageStatus("pending");
       setTimeLeft(Constants.EXAM_DEFAULT_TIME);
     } else {
-      setDialog({type: "error", message: "Server internal error", onClose: ()=>{setDialog(null)} });
+      setDialog({
+        type: "error",
+        message: "Server internal error",
+        onClose: () => {
+          setDialog(null);
+        },
+      });
     }
   };
 
@@ -96,30 +125,31 @@ export default function QuestionsPage({
 
       {pageStatus === "start" && <StartView startFunction={examStart} />}
       {(pageStatus === "pending" || isShowQuestionsResult == true) && (
-        <>
+        <div className="pb-20">
           <QuestionsView
             questions={questions}
             isAnswerSelectedFunction={isAnswerSelected}
             status={pageStatus}
             selectFunction={handleAnswerSelect}
           />
-          <Timer timeLeft={timeLeft} />
-          <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-md flex justify-between items-center">
-        {/* Back Button */}
-        <button
-          className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 transition-colors duration-300"
-          onClick={handleBack}
-        >
-          Back
-        </button>
-          <button
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-400 transition-colors duration-300"
-            onClick={handleFinish}
-          >
-            Finish
-          </button>
-      </div>
-        </>
+          <div className="fixed bottom-0 left-0 right-0 bg-white bg-opacity-80 p-4 shadow-md flex justify-between items-center">
+            <CustomButton type="default" label="Back" onClick={handleBack} />
+            <Timer timeLeft={timeLeft} />
+            {pageStatus !== "finished" ? (
+              <CustomButton
+                type="success"
+                label="Finish"
+                onClick={handleFinish}
+              />
+            ) : (
+              <CustomButton
+                type="black"
+                label="Result"
+                onClick={handleResult}
+              />
+            )}
+          </div>
+        </div>
       )}
       {pageStatus === "finished" && isShowQuestionsResult == false && (
         <FinishedView
@@ -133,6 +163,7 @@ export default function QuestionsPage({
           type={dialog.type}
           message={dialog.message}
           onClose={dialog.onClose}
+          onComplete={dialog.onComplete}
         />
       )}
     </div>

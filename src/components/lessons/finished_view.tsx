@@ -23,7 +23,7 @@ export default function FinishedView({
   return (
     <>
       <div className="flex justify-center min-h-screen bg-gray-100">
-        <div className="bg-white p-8 rounded-lg shadow-md max-h-80 mt-10 text-black">
+        <div className="bg-white py-8 px-24 rounded-lg shadow-md max-h-80 mt-10 text-black">
           <h1 className="text-gray-500 text-3xl font-bold text-center mb-6">
             Quiz Finished!
           </h1>

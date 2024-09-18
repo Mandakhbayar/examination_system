@@ -1,6 +1,6 @@
 import React from "react";
 import { DialogDetailType } from "../../utils/types";
-
+import CustomButton from "./button";
 
 const dialogTypeStyles = {
   info: {
@@ -70,20 +70,10 @@ const Dialog: React.FC<DialogDetailType> = ({
         <p className={`mt-4 text-lg ${textColor}`}>{message}</p>
 
         {/* Close Button */}
-        <div className="mt-6 text-right">
-          <button
-            className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 transition-colors duration-300"
-            onClick={onClose}
-          >
-            Close
-          </button>
+        <div className="flex mt-6 justify-end gap-2">
+          <CustomButton label="Close" type="default" onClick={onClose} />
           {onComplete && (
-            <button
-              className="px-4 py-2 bg-gray-700 ml-2 text-white rounded hover:bg-gray-600 transition-colors duration-300"
-              onClick={onComplete}
-            >
-              OK
-            </button>
+            <CustomButton label="OK" type="black" onClick={onComplete} />
           )}
         </div>
       </div>

@@ -36,33 +36,19 @@ export default async function handler(
 
     const [rows] = await pool.query<RowDataPacket[]>(
       `
-      SELECT q.id AS question_id, q.text AS question_text,
-             a.id AS answer_id, a.text AS answer_text, a.is_correct
-      FROM (
-          SELECT id, text
-          FROM questions
-          WHERE lesson_id = ?
-          ORDER BY RAND()
-          LIMIT 10
-      ) q
-      LEFT JOIN (
-          SELECT a.id, a.question_id, a.text, a.is_correct
-          FROM answers a
-          JOIN (
-              SELECT id AS question_id
-              FROM questions
-              WHERE lesson_id = ?
+      SELECT question.id AS question_id, question.question_text AS question_text,
+          answer.id AS answer_id, answer.text AS answer_text, answer.is_correct
+          FROM (
+              SELECT q.id as id, q.text as question_text
+              FROM questions AS q
+              WHERE q.lesson_id = ?
               ORDER BY RAND()
               LIMIT 10
-          ) AS temp
-          ON a.question_id = temp.question_id
-          ORDER BY a.question_id, RAND()
-      ) a ON q.id = a.question_id
-      GROUP BY q.id, a.id
-      HAVING COUNT(a.id) <= 4
-      ORDER BY q.id, a.id;
+          ) AS question
+          JOIN answers AS answer ON answer.question_id = question.id
+          ORDER BY RAND();
       `,
-      [lessonId, lessonId]
+      [lessonId]
     );
 
     const questionsMap: { [key: number]: Question } = {};
