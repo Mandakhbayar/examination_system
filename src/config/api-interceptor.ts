@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Constants } from "../utils/constants";
 
 export const ERROR_CODES = {
@@ -24,16 +24,25 @@ axiosInterceptorInstance.interceptors.request.use(
     return config;
   },
   (error) => {
-    // Handle request errors here
-    console.error("Request error:", error);
     return Promise.reject(error);
   }
 );
-// End of Request interceptor
 
 // Response interceptor
-axiosInterceptorInstance.interceptors.response.use((response) => {
-  return response;
-});
+axiosInterceptorInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error: AxiosError) => {
+    if (typeof window !== "undefined") {
+      if (error.response?.status === ERROR_CODES.UNAUTHORIZED) {
+        localStorage.removeItem(Constants.ACCESS_TOKEN_KEY);
+        window.location.href = "/auth/login";
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default axiosInterceptorInstance;

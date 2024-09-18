@@ -4,6 +4,7 @@ import CustomButton from "../ui/button";
 interface FinishedViewProps {
   questions: Question[];
   selectedAnswers: SelectedAnswer[];
+  timeTaken: number;
   onShowQuestionResult: () => void;
   onBack: () => void;
 }
@@ -12,7 +13,8 @@ export default function FinishedView({
   questions,
   selectedAnswers,
   onShowQuestionResult,
-  onBack
+  onBack,
+  timeTaken
 }: FinishedViewProps) {
   const correctAnswersCount = selectedAnswers.filter((answer) =>
     questions
@@ -32,18 +34,23 @@ export default function FinishedView({
           </h1>
           <div className="text-center">
             <h2 className="text-xl mb-4">
-              <h2 className="text-xl mb-4">
-                Your Answered Questions: {selectedQuestions} / {totalQuestions}
-              </h2>
-              Your Score: {correctAnswersCount} / {totalQuestions}
+              Your Score: <span className="text-2xl font-bold">{correctAnswersCount} / {totalQuestions}</span>
             </h2>
-            <h2 className="text-2xl font-semibold mb-6">
+            <h2 className="text-2xl font-semibold mb-4">
               Points: {score} / {totalQuestions}
             </h2>
+            <h2 className="text-xl">
+              Your Answered Questions: <span className="text-2xl font-bold">{selectedQuestions} / {totalQuestions}</span>
+            </h2>
+            <h2 className="text-xl">Total Time Taken: <span className="text-2xl font-bold">{timeTaken} </span>seconds </h2>
           </div>
-          <div className="flex flex-col gap-2 justify-center">
-            <CustomButton label="Show Result Detail" type="black" onClick={onShowQuestionResult}/>
-            <CustomButton label="Home" type="white" onClick={onBack}/>
+          <div className="flex flex-col gap-2 justify-center mt-6">
+            <CustomButton
+              label="Show Result Detail"
+              type="black"
+              onClick={onShowQuestionResult}
+            />
+            <CustomButton label="Home" type="white" onClick={onBack} />
           </div>
         </div>
       </div>

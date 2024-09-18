@@ -1,28 +1,49 @@
-import { GetServerSideProps } from "next";
 import { DialogDetailType, Lesson } from "@/utils/types";
 import LessonCard from "../../components/lessons/lesson_card";
 import axiosInterceptorInstance from "../../config/api-interceptor";
 import { useEffect, useState } from "react";
 import Dialog from "../../components/ui/dialog";
-import { DefaultStrings } from '../../utils/strings';
+import { DefaultStrings } from "../../utils/strings";
+import LoadingScreen from "../../components/loading-screen";
 
-interface LessonsPageProps {
-  lessons: Lesson[];
-}
-
-const LessonsPage: React.FC<LessonsPageProps> = ({ lessons }) => {
+export default function LessonsPage() {
   const [dialog, setDialog] = useState<DialogDetailType | null>(null);
-  // const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [isFetch, setIsFetch] = useState(true);
 
   useEffect(()=>{
-    if(!lessons || lessons.length == 0){
-      setDialog({type: "error", message: DefaultStrings.LESSONS_NOT_FOUND, onClose: onCloseDialog })
+    if(isFetch){
+      fetchData();
+    } 
+  },[isFetch])
+
+  async function fetchData() {
+    setIsLoading(true);
+    try {
+      const res = await axiosInterceptorInstance.get("/lessons");
+
+      if (!res.data || res.data.length == 0) {
+        throw new Error(DefaultStrings.DATA_NOT_FOUND);
+      }
+      setLessons(res.data);
+      setIsFetch(false);
+    } catch (error) {
+      setDialog({
+        type: "error",
+        message: DefaultStrings.SERVER_INTERNAL_ERROR,
+        onClose: onCloseDialog,
+      });
     }
-  },[lessons])
+    setIsLoading(false);
+  }
 
   const onCloseDialog = () => {
     setDialog(null);
     // router.push(Routes.private.lessons)
+  };
+  if(isLoading){
+    return <LoadingScreen/>
   }
 
   return (
@@ -35,38 +56,15 @@ const LessonsPage: React.FC<LessonsPageProps> = ({ lessons }) => {
           ))}
         </div>
         {dialog && (
-        <Dialog
-          type={dialog.type}
-          message={dialog.message}
-          onClose={dialog.onClose}
-          onComplete={dialog.onComplete}
-        />
-      )}
+          <Dialog
+            type={dialog.type}
+            message={dialog.message}
+            onClose={dialog.onClose}
+            onComplete={dialog.onComplete}
+          />
+        )}
       </div>
     </>
   );
 };
 
-export const getServerSideProps: GetServerSideProps<
-  LessonsPageProps
-> = async () => {
-  try {
-    const res = await axiosInterceptorInstance.get("/lessons");
-    const lessons: Lesson[] = await res.data;
-
-    return {
-      props: {
-        lessons,
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching initial questions:", error);
-    return {
-      props: {
-        lessons: [],
-      },
-    };
-  }
-};
-
-export default LessonsPage;

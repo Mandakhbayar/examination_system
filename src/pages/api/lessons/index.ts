@@ -1,16 +1,20 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import pool from "@/config/db"; // Adjust path as necessary
+import pool from "@/config/db";
+import { validateToken } from "../../../config/api-middleware";
+import { CustomNextApiRequest } from "../../../utils/types";
+import { NextApiResponse } from "next";
+import { DefaultStrings } from "../../../utils/strings";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+const handler = async (req: CustomNextApiRequest, res: NextApiResponse) => {
   try {
     const [rows] = await pool.query(
       "SELECT id, title, description, image_url FROM lessons"
     );
     res.status(200).json(rows);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch lessons" });
+    console.log(error);
+    res.status(500).json({ error: DefaultStrings.SERVER_INTERNAL_ERROR });
   }
-}
+  return res;
+};
+
+export default validateToken(handler);

@@ -16,9 +16,7 @@ const useAuth = () => {
 
     if (token) {
       axiosInterceptorInstance
-        .get("/auth/check", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        .get("/auth/check")
         .then((response) => {
           setUser(response.data.user);
         })
@@ -27,6 +25,7 @@ const useAuth = () => {
         })
         .finally(() => setLoading(false));
     } else {
+      logout();
       setLoading(false);
     }
   }, [router]);

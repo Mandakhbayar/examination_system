@@ -7,4 +7,6 @@ export const DefaultStrings = {
   PHONE_NUMBER_INPUT_PLACEHOLDER: "Phone number",
 
   LESSONS_NOT_FOUND: "Lessons not found",
+  SERVER_INTERNAL_ERROR: "Server internal error",
+  DATA_NOT_FOUND: "Data not found",
 };

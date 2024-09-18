@@ -1,4 +1,3 @@
-import { GetServerSideProps } from "next";
 import { useState, useEffect } from "react";
 import {
   Lesson,
@@ -16,24 +15,28 @@ import FinishedView from "../../../components/lessons/finished_view";
 import { DialogDetailType } from "../../../utils/types";
 import CustomButton from "../../../components/ui/button";
 import { useRouter } from "next/navigation";
+import { DefaultStrings } from "../../../utils/strings";
+import LoadingScreen from "../../../components/loading-screen";
 
-interface QuestionsPageProps {
-  initialQuestions: Question[];
-  lesson: Lesson | null;
-}
-
-export default function QuestionsPage({
-  initialQuestions,
-  lesson,
-}: QuestionsPageProps) {
+export default function QuestionsPage() {
   const router = useRouter();
-  const [questions] = useState<Question[]>(initialQuestions);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [lesson, setLesson] = useState<Lesson | null>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswer[]>([]);
   const [pageStatus, setPageStatus] = useState<PageStatusType>("start");
   const [timeLeft, setTimeLeft] = useState<number>(Constants.EXAM_DEFAULT_TIME);
+  const [timeTaken, setTimeTaken] = useState<number>(0); // Track the time taken
+  const [isFetch, setIsFetch] = useState(true);
   const [isShowQuestionsResult, setIsShowQuestionsResult] =
     useState<boolean>(false);
   const [dialog, setDialog] = useState<DialogDetailType | null>(null);
+
+  useEffect(() => {
+    if (isFetch) {
+      fetchData();
+    }
+  }, [isFetch]);
 
   useEffect(() => {
     if (pageStatus === "pending" && timeLeft > 0) {
@@ -45,8 +48,43 @@ export default function QuestionsPage({
 
     if (timeLeft === 0) {
       setPageStatus("finished");
+      setTimeTaken(Constants.EXAM_DEFAULT_TIME - timeLeft); // Store time taken
     }
   }, [pageStatus, timeLeft]);
+
+  async function fetchData() {
+    setIsLoading(true);
+    try {
+      const id = window.location.pathname.split("/").pop();
+      if (!id) {
+        throw new Error("Query parameter 'id' is missing");
+      }
+      const res = await axiosInterceptorInstance.get(`/lessons/${id}`);
+      console.log("DATA>>" + res.data);
+
+      if (
+        !res.data ||
+        !res.data.questions ||
+        res.data.questions == 0 ||
+        !res.data.lesson
+      ) {
+        throw new Error(DefaultStrings.LESSONS_NOT_FOUND);
+      }
+      setQuestions(res.data.questions);
+      setLesson(res.data.lesson);
+      setIsFetch(false);
+    } catch (error) {
+      console.log(error);
+      setDialog({
+        type: "error",
+        message: DefaultStrings.SERVER_INTERNAL_ERROR,
+        onClose: () => {
+          router.back();
+        },
+      });
+    }
+    setIsLoading(false);
+  }
 
   const handleFinish = () => {
     setDialog({
@@ -57,8 +95,9 @@ export default function QuestionsPage({
       },
       onComplete: () => {
         setPageStatus("finished");
+        setTimeTaken(Constants.EXAM_DEFAULT_TIME - timeLeft); // Store time taken on finish
         setDialog(null);
-      }
+      },
     });
   };
 
@@ -98,7 +137,7 @@ export default function QuestionsPage({
     );
   };
 
-  const examStart = () => {
+  const handleStart = () => {
     if (questions && questions.length > 0) {
       setPageStatus("pending");
       setTimeLeft(Constants.EXAM_DEFAULT_TIME);
@@ -117,13 +156,17 @@ export default function QuestionsPage({
     setIsShowQuestionsResult(true);
   };
 
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="flex text-2xl  mb-6 text-black">
+      <h1 className="flex text-2xl mb-6 text-black">
         Lesson: <p className="font-bold ml-2">{lesson?.title}</p>
       </h1>
 
-      {pageStatus === "start" && <StartView startFunction={examStart} />}
+      {pageStatus === "start" && <StartView startFunction={handleStart} />}
       {(pageStatus === "pending" || isShowQuestionsResult == true) && (
         <div className="pb-20">
           <QuestionsView
@@ -157,6 +200,7 @@ export default function QuestionsPage({
           selectedAnswers={selectedAnswers}
           onShowQuestionResult={ShowQuestionResult}
           onBack={handleBack}
+          timeTaken={timeTaken} // Pass time taken to FinishedView
         />
       )}
       {dialog && (
@@ -170,29 +214,3 @@ export default function QuestionsPage({
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps<
-  QuestionsPageProps
-> = async (context) => {
-  const { id } = context.query;
-  try {
-    const response = await axiosInterceptorInstance.get(`/lessons/${id}`);
-    const initialQuestions: Question[] = response.data.questions;
-    const lesson: Lesson = response.data.lesson;
-
-    return {
-      props: {
-        initialQuestions,
-        lesson,
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching initial questions:", error);
-    return {
-      props: {
-        initialQuestions: [],
-        lesson: null,
-      },
-    };
-  }
-};

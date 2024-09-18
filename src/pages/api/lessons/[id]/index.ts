@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import pool from "@/config/db";
 import { Question } from "@/utils/types";
 import { RowDataPacket } from "mysql2";
+import { validateToken } from "../../../../config/api-middleware";
 
 interface QueryRow {
   question_id: number;
@@ -11,10 +12,7 @@ interface QueryRow {
   is_correct: boolean;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const lessonId = req.query.id as string;
 
@@ -79,4 +77,6 @@ export default async function handler(
     res.status(500).json({ message: "Server error", error });
   }
   return res;
-}
+};
+
+export default validateToken(handler);
