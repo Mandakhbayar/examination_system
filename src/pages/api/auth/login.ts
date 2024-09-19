@@ -31,7 +31,7 @@ export default async function handler(
         return res.status(401).json({ message: "Invalid email or password" });
       }
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = await bcrypt.compare(password, user.password!);
 
       if (isMatch) {
         const token = jwt.sign(

@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import { Routes } from '../../utils/routes';
 import useAuth from '../../hooks/use-auth';
 import { AlertType } from '../../utils/types';
-import { DefaultStrings } from '../../utils/strings';
+import { DefaultStrings, ErrorStrings } from '../../utils/strings';
+import { Constants } from '../../utils/constants';
 
 interface LoginFormType {
   email: string;
@@ -56,7 +57,13 @@ export default function LoginForm() {
           type="email"
           className={styles.input}
           placeholder={DefaultStrings.EMAIL_INPUT_PLACEHOLDER}
-          {...register('email', { required: 'Email is required' })}
+          {...register("email", {
+            pattern: {
+              value: new RegExp(Constants.EMAIL_REGEX),
+              message: ErrorStrings.INVALID_EMAIL,
+            },
+            required: "Email is required",
+          })}
         />
         {errors.email && <p className={styles.errorMessage}>{errors.email.message}</p>}
       </div>
@@ -68,7 +75,13 @@ export default function LoginForm() {
           type="password"
           className={styles.input}
           placeholder={DefaultStrings.PASSWORD_INPUT_PLACEHOLDER}
-          {...register('password', { required: 'Password is required' })}
+          {...register("password", {
+            required: "Password is required",
+            pattern: {
+              value: new RegExp(Constants.PASSWORD_REGEX),
+              message: ErrorStrings.INVALID_PASSWORD,
+            },
+          })}
         />
         {errors.password && <p className={styles.errorMessage}>{errors.password.message}</p>}
       </div>

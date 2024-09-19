@@ -8,6 +8,7 @@ export const Routes = {
   },
   private: {
     lessons: "/lessons",
+    questions: (id: string) => `/lessons/${id}`,
   },
   admin: {},
 };

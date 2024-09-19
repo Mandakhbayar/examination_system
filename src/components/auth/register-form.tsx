@@ -5,31 +5,25 @@ import styles from "@/styles/auth.module.css";
 import Alert from "../ui/alert";
 import { useRouter } from "next/navigation";
 import { Routes } from "../../utils/routes";
-import { AlertType } from "../../utils/types";
-import { DefaultStrings } from "../../utils/strings";
+import { AlertType, User } from "../../utils/types";
+import { DefaultStrings, ErrorStrings } from "../../utils/strings";
 import useAuth from "../../hooks/use-auth";
+import { Constants } from "../../utils/constants";
 
-interface RegisterFormType {
-  firstname: string;
-  lastname: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-  confirmPassword: string;
-}
+
 
 export default function RegisterForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterFormType>();
+  } = useForm<User>();
   const [message, setMessage] = useState<string | null>(null);
   const [alertType, setAlertType] = useState<AlertType | undefined>(undefined);
   const router = useRouter();
-  const {user} = useAuth();
+  const { user } = useAuth();
 
-  const onSubmit: SubmitHandler<RegisterFormType> = async (data) => {
+  const onSubmit: SubmitHandler<User> = async (data) => {
     setMessage(null);
     setAlertType("error");
 
@@ -65,14 +59,17 @@ export default function RegisterForm() {
     router.push(Routes.auth.login);
   };
 
-  useEffect(()=>{
-    if(user){
+  useEffect(() => {
+    if (user) {
       router.push(Routes.private.lessons);
     }
-  },[user])
+  }, [user]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainerRegister}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className={styles.formContainerRegister}
+    >
       <label className={styles.title}>Register</label>
       {message && <Alert message={message} type={alertType} />}
       <div className={styles.formGroup}>
@@ -84,7 +81,13 @@ export default function RegisterForm() {
           type="email"
           className={styles.input}
           placeholder={DefaultStrings.EMAIL_INPUT_PLACEHOLDER}
-          {...register("email", { required: "Email is required" })}
+          {...register("email", {
+            pattern: {
+              value: new RegExp(Constants.EMAIL_REGEX),
+              message: ErrorStrings.INVALID_EMAIL,
+            },
+            required: "Email is required",
+          })}
         />
         {errors.email && (
           <p className={styles.errorMessage}>{errors.email.message}</p>
@@ -128,10 +131,17 @@ export default function RegisterForm() {
         </label>
         <input
           id="firstname"
-          type="text"
+          type="tel"
           className={styles.input}
+          maxLength={8}
           placeholder={DefaultStrings.PHONE_NUMBER_INPUT_PLACEHOLDER}
-          {...register("phoneNumber", { required: "Phone number is required" })}
+          {...register("phoneNumber", {
+            required: "Phone number is required",
+            pattern: {
+              value: new RegExp(Constants.PHONE_NUMBER_REGEX),
+              message: ErrorStrings.INVALID_PHONE_NUMBER,
+            },
+          })}
         />
         {errors.phoneNumber && (
           <p className={styles.errorMessage}>{errors.phoneNumber.message}</p>
@@ -146,7 +156,13 @@ export default function RegisterForm() {
           type="password"
           className={styles.input}
           placeholder={DefaultStrings.PASSWORD_INPUT_PLACEHOLDER}
-          {...register("password", { required: "Password is required" })}
+          {...register("password", {
+            required: "Password is required",
+            pattern: {
+              value: new RegExp(Constants.PASSWORD_REGEX),
+              message: ErrorStrings.INVALID_PASSWORD,
+            },
+          })}
         />
         {errors.password && (
           <p className={styles.errorMessage}>{errors.password.message}</p>
@@ -164,6 +180,10 @@ export default function RegisterForm() {
           placeholder={DefaultStrings.CONFIRM_PASSWORD_INPUT_PLACEHOLDER}
           {...register("confirmPassword", {
             required: "Confirm Password is required",
+            pattern: {
+              value: new RegExp(Constants.PASSWORD_REGEX),
+              message: ErrorStrings.INVALID_PASSWORD,
+            },
           })}
         />
         {errors.confirmPassword && (

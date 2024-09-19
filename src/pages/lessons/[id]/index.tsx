@@ -15,7 +15,7 @@ import FinishedView from "../../../components/lessons/finished_view";
 import { DialogDetailType } from "../../../utils/types";
 import CustomButton from "../../../components/ui/button";
 import { useRouter } from "next/navigation";
-import { DefaultStrings } from "../../../utils/strings";
+import { ErrorStrings } from "../../../utils/strings";
 import LoadingScreen from "../../../components/loading-screen";
 
 export default function QuestionsPage() {
@@ -68,7 +68,7 @@ export default function QuestionsPage() {
         res.data.questions == 0 ||
         !res.data.lesson
       ) {
-        throw new Error(DefaultStrings.LESSONS_NOT_FOUND);
+        throw new Error(ErrorStrings.DATA_NOT_FOUND);
       }
       setQuestions(res.data.questions);
       setLesson(res.data.lesson);
@@ -77,7 +77,7 @@ export default function QuestionsPage() {
       console.log(error);
       setDialog({
         type: "error",
-        message: DefaultStrings.SERVER_INTERNAL_ERROR,
+        message: ErrorStrings.SERVER_INTERNAL_ERROR,
         onClose: () => {
           router.back();
         },

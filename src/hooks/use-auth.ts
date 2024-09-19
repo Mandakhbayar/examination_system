@@ -12,7 +12,9 @@ const useAuth = () => {
 
   useEffect(() => {
     const token = localStorage.getItem(Constants.ACCESS_TOKEN_KEY);
-    console.log("TOKEN hook:" + token);
+    console.log(
+      "TOKEN hook:" + (window.location.pathname == Routes.auth.login)
+    );
 
     if (token) {
       axiosInterceptorInstance
@@ -25,10 +27,9 @@ const useAuth = () => {
         })
         .finally(() => setLoading(false));
     } else {
-      logout();
       setLoading(false);
     }
-  }, [router]);
+  }, []);
 
   const login = async (email: string, password: string) => {
     try {
@@ -39,7 +40,6 @@ const useAuth = () => {
       const { token, user } = response.data;
       localStorage.setItem(Constants.ACCESS_TOKEN_KEY, token);
       setUser(user);
-      router.push(Routes.private.lessons);
     } catch (error) {
       console.error("Login error:", error);
       throw error;

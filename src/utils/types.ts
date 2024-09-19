@@ -1,9 +1,13 @@
 import { NextApiRequest } from "next";
 
 export interface User {
-  id: number;
-  email: string;
-  password: string;
+  id?: number;
+  firstname?: string;
+  lastname?: string;
+  email?: string;
+  phoneNumber?: string;
+  password?: string;
+  confirmPassword?: string;
 }
 
 export type AlertType = "success" | "error" | "warning" | "info";

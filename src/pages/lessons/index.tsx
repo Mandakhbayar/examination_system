@@ -3,7 +3,7 @@ import LessonCard from "../../components/lessons/lesson_card";
 import axiosInterceptorInstance from "../../config/api-interceptor";
 import { useEffect, useState } from "react";
 import Dialog from "../../components/ui/dialog";
-import { DefaultStrings } from "../../utils/strings";
+import { ErrorStrings } from "../../utils/strings";
 import LoadingScreen from "../../components/loading-screen";
 
 export default function LessonsPage() {
@@ -24,14 +24,14 @@ export default function LessonsPage() {
       const res = await axiosInterceptorInstance.get("/lessons");
 
       if (!res.data || res.data.length == 0) {
-        throw new Error(DefaultStrings.DATA_NOT_FOUND);
+        throw new Error(ErrorStrings.DATA_NOT_FOUND);
       }
       setLessons(res.data);
       setIsFetch(false);
     } catch (error) {
       setDialog({
         type: "error",
-        message: DefaultStrings.SERVER_INTERNAL_ERROR,
+        message: ErrorStrings.SERVER_INTERNAL_ERROR,
         onClose: onCloseDialog,
       });
     }

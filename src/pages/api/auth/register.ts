@@ -3,16 +3,17 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import pool from "@/config/db";
 import { RowDataPacket } from "mysql2";
+import { User } from "../../../utils/types";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { email, password } = req.body;
+    const user = req.body as User;
     console.log("Database URL:", process.env.DATABASE_URL);
 
-    if (!email || !password) {
+    if (!user.email || !user.password) {
       return res
         .status(400)
         .json({ message: "Email and password are required" });
@@ -21,18 +22,24 @@ export default async function handler(
     try {
       const [existingUser] = await pool.query<RowDataPacket[]>(
         "SELECT * FROM users WHERE email = ?",
-        [email]
+        [user.email]
       );
       if (existingUser.length > 0) {
         return res.status(409).json({ message: "User already exists" });
       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(user.password, 10);
 
-      await pool.query("INSERT INTO users (email, password) VALUES (?, ?)", [
-        email,
-        hashedPassword,
-      ]);
+      await pool.query(
+        "INSERT INTO users (firstname, lastname, email, phone_number, password) VALUES (?, ?, ?, ?, ?)",
+        [
+          user.firstname,
+          user.lastname,
+          user.email,
+          user.phoneNumber,
+          hashedPassword,
+        ]
+      );
 
       res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
