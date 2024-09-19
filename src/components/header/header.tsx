@@ -6,7 +6,7 @@ import { Routes } from '../../utils/routes';
 
 export default function Header() {
   const { user, logout } = useAuth();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const router = useRouter();
 
   const toggleDropdown = () => {
@@ -15,12 +15,12 @@ export default function Header() {
 
   useEffect(()=>{
     setDropdownOpen(false);
-  },[user])
+  },[router])
 
   return (
     <header className="bg-black text-white py-4 px-6 shadow-lg">
       <div className="container mx-auto flex justify-between">
-        <h1 onClick={()=>router.push(Routes.private.lessons)} className="text-2xl font-bold cursor-pointer">Examination system</h1>
+        <h1 onClick={()=>{router.push(Routes.private.lessons)}} className="text-2xl font-bold cursor-pointer">Examination system</h1>
         <nav className="flex items-center space-x-4">
         {user ? (
             <div className="relative">

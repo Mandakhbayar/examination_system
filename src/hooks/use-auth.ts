@@ -11,25 +11,30 @@ const useAuth = () => {
   const router = useRouter();
 
   useEffect(() => {
+    if (
+      [Routes.auth.login, Routes.auth.register].includes(
+        window.location.pathname
+      )
+    ) {
+      return;
+    }
     const token = localStorage.getItem(Constants.ACCESS_TOKEN_KEY);
-    console.log(
-      "TOKEN hook:" + (window.location.pathname == Routes.auth.login)
-    );
 
     if (token) {
       axiosInterceptorInstance
         .get("/auth/check")
         .then((response) => {
-          setUser(response.data.user);
+          // setUser(response.data.user);
         })
         .catch(() => {
-          logout();
+          // logout();
         })
         .finally(() => setLoading(false));
     } else {
+      logout();
       setLoading(false);
     }
-  }, []);
+  }, [router]);
 
   const login = async (email: string, password: string) => {
     try {

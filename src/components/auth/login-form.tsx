@@ -18,13 +18,12 @@ interface LoginFormType {
 export default function LoginForm() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormType>();
   const [message, setMessage] = useState<string | null>(null);
-  const [alertType, setAlertType] = useState<AlertType | undefined>(undefined);
+  const [alertType, setAlertType] = useState<AlertType | undefined>("error");
   const {login, user} = useAuth();
   const router = useRouter();
 
   const onSubmit: SubmitHandler<LoginFormType> = async (data:LoginFormType) => {
     setMessage(null);
-    
     try {
       await login(data.email, data.password)
       setAlertType("success");

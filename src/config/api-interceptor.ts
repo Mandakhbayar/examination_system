@@ -37,7 +37,6 @@ axiosInterceptorInstance.interceptors.response.use(
     if (typeof window !== "undefined") {
       if (error.response?.status === ERROR_CODES.UNAUTHORIZED) {
         localStorage.removeItem(Constants.ACCESS_TOKEN_KEY);
-        window.location.href = "/auth/login";
       }
     }
 
