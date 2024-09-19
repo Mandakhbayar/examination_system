@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // Fetch users with pagination
       const [rows] = await pool.query<RowDataPacket[]>(
-        "SELECT id, firstname, lastname, email, phoneNumber FROM users LIMIT ? OFFSET ?",
+        "SELECT id, firstname, lastname, email, phone_number FROM users LIMIT ? OFFSET ?",
         [limitNumber, offset]
       );
 

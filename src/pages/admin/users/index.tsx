@@ -29,7 +29,6 @@ const UsersPage = () => {
     }
   };
   useEffect(() => {
-    
     fetchUsers();
   }, [page, limit]);
 
