@@ -14,7 +14,7 @@ export default function FinishedView({
   selectedAnswers,
   onShowQuestionResult,
   onBack,
-  timeTaken
+  timeTaken,
 }: FinishedViewProps) {
   const correctAnswersCount = selectedAnswers.filter((answer) =>
     questions
@@ -34,15 +34,27 @@ export default function FinishedView({
           </h1>
           <div className="flex flex-col text-center">
             <h2 className="flex justify-between text-xl mb-4">
-              Your Score: <span className="text-2xl font-bold">{correctAnswersCount} / {totalQuestions}</span>
+              Your Score:{" "}
+              <span className="text-2xl font-bold">
+                {correctAnswersCount} / {totalQuestions}
+              </span>
             </h2>
             <h2 className="flex justify-between text-2xl font-semibold mb-4">
-              Points: <span className="text-2xl font-bold">{score} / {totalQuestions}</span>
+              Points:{" "}
+              <span className="text-2xl font-bold">
+                {score} / {totalQuestions}
+              </span>
+            </h2> 
+            <h2 className="flex justify-between text-xl mb-4">
+              Total Time Taken:{" "}
+              <span className="text-2xl font-bold">{timeTaken} sec</span>{" "}
             </h2>
-            <h2 className="flex justify-between text-xl gap-8">
-              Your Answered Questions: <span className="text-2xl font-bold">{selectedQuestions} / {totalQuestions}</span>
+            <h2 className="flex justify-between text-xl gap-8 mb-4">
+              Your Answered Questions:{" "}
+              <span className="text-2xl font-bold">
+                {selectedQuestions} / {totalQuestions}
+              </span>
             </h2>
-            <h2 className="flex justify-between text-xl">Total Time Taken: <span className="text-2xl font-bold">{timeTaken} sec</span> </h2>
           </div>
           <div className="flex flex-col gap-2 justify-center mt-6">
             <CustomButton
