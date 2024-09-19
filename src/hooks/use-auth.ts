@@ -24,10 +24,10 @@ const useAuth = () => {
       axiosInterceptorInstance
         .get("/auth/check")
         .then((response) => {
-          // setUser(response.data.user);
+          setUser(response.data.user);
         })
         .catch(() => {
-          // logout();
+          logout();
         })
         .finally(() => setLoading(false));
     } else {

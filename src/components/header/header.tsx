@@ -15,7 +15,7 @@ export default function Header() {
 
   useEffect(()=>{
     setDropdownOpen(false);
-  },[router])
+  },[user])
 
   return (
     <header className="bg-black text-white py-4 px-6 shadow-lg">
