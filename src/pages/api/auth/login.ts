@@ -41,7 +41,7 @@ export default async function handler(
         );
         return res.status(200).json({
           message: "Login successful",
-          user: { id: user.id, email: user.email }, // Return user info safely
+          user: { id: user.id, email: user.email, role: user.role },
           token: token,
         });
       } else {

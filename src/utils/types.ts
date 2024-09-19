@@ -18,11 +18,7 @@ export type Role = "user" | "admin";
 export type AlertType = "success" | "error" | "warning" | "info";
 
 export interface CustomNextApiRequest extends NextApiRequest {
-  user?: {
-    email: string;
-    iat: number;
-    exp: number;
-  };
+  user?: User;
 }
 
 export interface Lesson {
