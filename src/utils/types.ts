@@ -8,7 +8,12 @@ export interface User {
   phoneNumber?: string;
   password?: string;
   confirmPassword?: string;
+  role?: Role;
+  createdAt: string;
+  updatedAt: string;
 }
+
+export type Role = "user" | "admin";
 
 export type AlertType = "success" | "error" | "warning" | "info";
 

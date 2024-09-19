@@ -29,15 +29,19 @@ export default async function handler(
       }
 
       const hashedPassword = await bcrypt.hash(user.password, 10);
+      const now = new Date();
 
       await pool.query(
-        "INSERT INTO users (firstname, lastname, email, phone_number, password) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO users (firstname, lastname, email, phone_number, password, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         [
           user.firstname,
           user.lastname,
           user.email,
           user.phoneNumber,
           hashedPassword,
+          "user",
+          now,
+          now,
         ]
       );
 
