@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { User } from "../../../utils/types";
 import Alert from "../../../components/ui/alert";
@@ -15,26 +14,27 @@ const UsersPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axiosInterceptorInstance.get(
+        `/users?page=${page}&limit=${limit}`
+      );
+      setUsers(response.data.users);
+      setTotalUsers(response.data.total);
+      setIsLoading(false);
+    } catch {
+      setError("Error fetching users");
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchUsers = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axiosInterceptorInstance.get(
-          `/users?page=${page}&limit=${limit}`
-        );
-        setUsers(response.data.users);
-        setTotalUsers(response.data.total);
-        setIsLoading(false);
-      } catch {
-        setError("Error fetching users");
-        setIsLoading(false);
-      }
-    };
+    
     fetchUsers();
   }, [page, limit]);
 
   const handleEdit = (id: number) => {
-    // router.push(`/admin/edit-user?id=${id}`);
+    router.push(`/admin/edit-user?id=${id}`);
   };
 
   const totalPages = Math.ceil(totalUsers / limit);
