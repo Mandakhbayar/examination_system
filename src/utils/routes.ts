@@ -10,5 +10,8 @@ export const Routes = {
     lessons: "/lessons",
     questions: (id: string) => `/lessons/${id}`,
   },
-  admin: {},
+  admin: {
+    users: "/admin/users",
+    userDetail: (id: number) => `/admin/users/${id}`
+  },
 };

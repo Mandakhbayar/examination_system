@@ -5,12 +5,12 @@ export interface User {
   firstname?: string;
   lastname?: string;
   email?: string;
-  phoneNumber?: string;
+  phone_number?: string;
   password?: string;
   confirmPassword?: string;
   role?: Role;
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export type Role = "user" | "admin";
