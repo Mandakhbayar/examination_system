@@ -95,7 +95,7 @@ export default function EditUserForm({ user }: { user: User | null }) {
         </div>
       </div>
       <div className={styles.formGroup}>
-        <label htmlFor="phoneNumber" className={styles.label}>
+        <label htmlFor="phone_number" className={styles.label}>
           Phone Number:
         </label>
         <input

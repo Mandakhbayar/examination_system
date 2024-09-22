@@ -37,7 +37,7 @@ export default async function handler(
           user.firstname,
           user.lastname,
           user.email,
-          user.phoneNumber,
+          user.phone_number,
           hashedPassword,
           "user",
           now,
