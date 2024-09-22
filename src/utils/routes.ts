@@ -12,6 +12,8 @@ export const Routes = {
   },
   admin: {
     users: "/admin/users",
-    userDetail: (id: number) => `/admin/users/${id}`
+    userDetail: (id: number) => `/admin/users/${id}`,
+    lessons: "/admin/lessons",
+    lessonDetail: (id: number) => `/admin/lessons/${id}`,
   },
 };

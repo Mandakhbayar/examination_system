@@ -6,7 +6,10 @@ import { validateToken } from "../../../../config/api-middleware";
 
 interface QueryRow {
   question_id: number;
-  question_text: string;
+  question_text?: string;
+  question_image?: string;
+  question_video?: string;
+  question_audio?: string;
   answer_id: number;
   answer_text: string;
   is_correct: boolean;
@@ -34,10 +37,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const [rows] = await pool.query<RowDataPacket[]>(
       `
-      SELECT question.id AS question_id, question.question_text AS question_text,
+      SELECT question.id AS question_id, question.text AS question_text, question.image AS question_image, 
+          question.video AS question_video, question.audio AS question_audio,
           answer.id AS answer_id, answer.text AS answer_text, answer.is_correct
           FROM (
-              SELECT q.id as id, q.text as question_text
+              SELECT q.id as id, q.text, q.image, q.video, q.audio
               FROM questions AS q
               WHERE q.lesson_id = ?
               ORDER BY RAND()
@@ -60,6 +64,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         questionsMap[row.question_id] = {
           id: row.question_id,
           text: row.question_text,
+          image: row.question_image,
+          video: row.question_video,
+          audio: row.question_audio,
           answers: [],
         };
       }

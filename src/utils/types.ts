@@ -36,7 +36,11 @@ export type Answer = {
 
 export type Question = {
   id: number;
-  text: string;
+  text?: string;
+  lesson_id?: string;
+  image?: string;
+  video?: string;
+  audio?: string;
   answers: Answer[];
 };
 

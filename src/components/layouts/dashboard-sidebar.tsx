@@ -6,13 +6,20 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { FaUsers } from "react-icons/fa";
 
-const usersPaths = [Routes.admin.users, Routes.admin.userDetail];
+const userPaths = [Routes.admin.users, Routes.admin.userDetail];
+const lessonPaths = [Routes.admin.lessons, Routes.admin.lessonDetail];
 
 export const menuData = [
   {
     id: 1,
     name: "Users",
     path: Routes.admin.users,
+    icon: <FaUsers className="h-auto w-5" />,
+  },
+  {
+    id: 1,
+    name: "Lessons",
+    path: Routes.admin.lessons,
     icon: <FaUsers className="h-auto w-5" />,
   },
 ];
@@ -30,8 +37,14 @@ export default function DashboardSidebar({
       return true;
     }
     if (
-      usersPaths.includes(itemPath) &&
-      usersPaths.includes(routePathName ?? "")
+      userPaths.includes(itemPath) &&
+      userPaths.includes(routePathName ?? "")
+    ) {
+      return true;
+    }
+    if (
+      lessonPaths.includes(itemPath) &&
+      lessonPaths.includes(routePathName ?? "")
     ) {
       return true;
     }
