@@ -203,7 +203,7 @@ export default function QuestionsPage() {
           selectedAnswers={selectedAnswers}
           onShowQuestionResult={ShowQuestionResult}
           onBack={()=>{router.back()}}
-          timeTaken={timeTaken} // Pass time taken to FinishedView
+          timeTaken={timeTaken} 
         />
       )}
       {dialog && (
