@@ -110,8 +110,11 @@ export default function QuestionsPage() {
       type: "info",
       message: "Are you sure you want to go back?",
       onClose: () => {
-        router.back();
+        setDialog(null);
       },
+      onComplete: () => {
+        router.back();
+      }
     });
   };
 
