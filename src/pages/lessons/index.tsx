@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Dialog from "../../components/ui/dialog";
 import { ErrorStrings } from "../../utils/strings";
 import LoadingScreen from "../../components/loading-screen";
+import { Routes } from "@/utils/routes";
 
 export default function LessonsPage() {
   const [dialog, setDialog] = useState<DialogDetailType | null>(null);
@@ -52,7 +53,7 @@ export default function LessonsPage() {
         <h1 className="text-2xl font-bold mb-4 text-black">Lessons</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {lessons.map((lesson) => (
-            <LessonCard key={lesson.id} lesson={lesson} />
+            <LessonCard key={lesson.id} lesson={lesson} href={Routes.private.questions(lesson.id)}/>
           ))}
         </div>
         {dialog && (

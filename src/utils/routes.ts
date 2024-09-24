@@ -14,6 +14,6 @@ export const Routes = {
     users: "/admin/users",
     userDetail: (id: number) => `/admin/users/${id}`,
     lessons: "/admin/lessons",
-    lessonDetail: (id: number) => `/admin/lessons/${id}`,
+    lessonDetail: (id: string) => `/admin/lessons/${id}`,
   },
 };

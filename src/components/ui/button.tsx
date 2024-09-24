@@ -3,8 +3,9 @@ import styles from '@/styles/auth.module.css';
 
 interface ButtonProps {
   label: string;
-  onClick: () => void;
-  type: ButtonType;
+  onClick?: () => void;
+  type?: "submit" | "reset" | "button" | undefined;
+  styleType: ButtonType
 }
 
 const buttonTypeStyles = {
@@ -15,11 +16,12 @@ const buttonTypeStyles = {
   white: styles.secondButton,
 };
 
-export default function CustomButton({ label, onClick, type }: ButtonProps) {
-  const buttonColor = buttonTypeStyles[type];
+export default function CustomButton({ label, onClick, type = "button", styleType }: ButtonProps) {
+  const buttonColor = buttonTypeStyles[styleType];
 
   return (
     <button
+      type={type}
       className={`px-6 py-2 rounded transition-colors duration-300 ${buttonColor}`}
       onClick={onClick}
     >

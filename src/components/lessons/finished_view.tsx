@@ -59,10 +59,10 @@ export default function FinishedView({
           <div className="flex flex-col gap-2 justify-center mt-6">
             <CustomButton
               label="Show Result Detail"
-              type="black"
+              styleType="black"
               onClick={onShowQuestionResult}
             />
-            <CustomButton label="Home" type="white" onClick={onBack} />
+            <CustomButton label="Home" styleType="white" onClick={onBack} />
           </div>
         </div>
       </div>

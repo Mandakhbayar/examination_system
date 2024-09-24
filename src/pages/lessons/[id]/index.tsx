@@ -26,7 +26,7 @@ export default function QuestionsPage() {
   const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswer[]>([]);
   const [pageStatus, setPageStatus] = useState<PageStatusType>("start");
   const [timeLeft, setTimeLeft] = useState<number>(Constants.EXAM_DEFAULT_TIME);
-  const [timeTaken, setTimeTaken] = useState<number>(0); // Track the time taken
+  const [timeTaken, setTimeTaken] = useState<number>(0);
   const [isFetch, setIsFetch] = useState(true);
   const [isShowQuestionsResult, setIsShowQuestionsResult] =
     useState<boolean>(false);
@@ -179,17 +179,17 @@ export default function QuestionsPage() {
             selectFunction={handleAnswerSelect}
           />
           <div className="fixed bottom-0 left-0 right-0 bg-white bg-opacity-80 p-4 shadow-md flex justify-between items-center">
-            <CustomButton type="default" label="Back" onClick={handleBack} />
+            <CustomButton styleType="default" label="Back" onClick={handleBack} />
             <Timer timeLeft={timeLeft} />
             {pageStatus !== "finished" ? (
               <CustomButton
-                type="success"
+                styleType="success"
                 label="Finish"
                 onClick={handleFinish}
               />
             ) : (
               <CustomButton
-                type="next"
+                styleType="next"
                 label="Result"
                 onClick={handleResult}
               />

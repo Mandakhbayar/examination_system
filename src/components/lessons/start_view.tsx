@@ -9,7 +9,7 @@ export default function StartView({startFunction}:{startFunction:VoidFunction}) 
             Click below to start!
           </p>
           <div className="flex justify-center">
-            <CustomButton label="Start Test" type="black" onClick={startFunction}/>
+            <CustomButton label="Start Test" styleType="black" onClick={startFunction}/>
           </div>
         </div>
       </div>

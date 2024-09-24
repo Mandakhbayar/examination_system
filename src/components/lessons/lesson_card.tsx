@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { Lesson } from "../../utils/types";
 import Image from "next/image";
-import { Routes } from "../../utils/routes";
 
-export default function LessonCard({ lesson }: { lesson: Lesson }) {
+export default function LessonCard({ lesson, href }: { lesson: Lesson, href: string }) {
   return (
-    <Link href={Routes.private.questions(lesson.id)} passHref>
+    <Link href={href} passHref>
       <div
         key={lesson.id}
         className="bg-white border rounded-lg shadow-md overflow-hidden"

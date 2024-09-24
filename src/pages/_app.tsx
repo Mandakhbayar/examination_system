@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return getLayout(
     <>
       <Header />
-      <div className="pt-16">
+      <div className="pt-16 text-black">
         <Component {...pageProps} />
       </div>
     </>

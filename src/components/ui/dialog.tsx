@@ -71,9 +71,9 @@ const Dialog: React.FC<DialogDetailType> = ({
 
         {/* Close Button */}
         <div className="flex mt-6 justify-end gap-2">
-          <CustomButton label="Close" type="default" onClick={onClose} />
+          <CustomButton label="Close" styleType="default" onClick={onClose} />
           {onComplete && (
-            <CustomButton label="OK" type="next" onClick={onComplete} />
+            <CustomButton label="OK" styleType="next" onClick={onComplete} />
           )}
         </div>
       </div>

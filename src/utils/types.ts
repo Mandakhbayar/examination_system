@@ -29,13 +29,13 @@ export interface Lesson {
 }
 
 export type Answer = {
-  id: number;
+  id?: string;
   text: string;
   isCorrect: boolean;
 };
 
 export type Question = {
-  id: number;
+  id: string;
   text?: string;
   lesson_id?: string;
   image?: string;

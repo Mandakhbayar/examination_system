@@ -86,7 +86,7 @@ const UsersPage = () => {
                   </td>
                   <td className="py-3 px-6">
                     <CustomButton
-                      type="next"
+                      styleType="next"
                       label="Edit"
                       onClick={() => handleEdit(user.id!)}
                     />
