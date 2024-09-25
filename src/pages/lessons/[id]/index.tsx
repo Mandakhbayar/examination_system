@@ -119,8 +119,8 @@ export default function QuestionsPage() {
   };
 
   const handleAnswerSelect = (
-    questionId: number,
-    answerId: number,
+    questionId: string,
+    answerId: string,
     isCorrect: boolean
   ) => {
     if (pageStatus === "pending") {
@@ -133,7 +133,7 @@ export default function QuestionsPage() {
     }
   };
 
-  const isAnswerSelected = (questionId: number, answerId: number): boolean => {
+  const isAnswerSelected = (questionId: string, answerId: string): boolean => {
     return selectedAnswers.some(
       (answer) =>
         answer.questionId === questionId && answer.answerId === answerId

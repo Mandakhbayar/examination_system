@@ -19,6 +19,9 @@ export type AlertType = "success" | "error" | "warning" | "info";
 
 export interface CustomNextApiRequest extends NextApiRequest {
   user?: User;
+  files?: {
+    [key: string]: Express.Multer.File[]; 
+  };
 }
 
 export interface Lesson {

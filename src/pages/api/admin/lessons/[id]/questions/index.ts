@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiResponse } from "next";
 import pool from "@/config/db"; // Assuming you have set up a DB pool
-import { Answer } from "@/utils/types";
+import { Answer, CustomNextApiRequest } from "@/utils/types";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Helper to run multer in the API route
-const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: any) => {
+const runMiddleware = (req: CustomNextApiRequest, res: NextApiResponse, fn: any) => {
   return new Promise((resolve, reject) => {
     fn(req, res, (result: any) => {
       if (result instanceof Error) {
@@ -36,7 +36,7 @@ const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: any) => {
 };
 
 const handler = async (
-  req: NextApiRequest & { files: any },
+  req: CustomNextApiRequest,
   res: NextApiResponse
 ) => {
   if (req.method === "POST") {

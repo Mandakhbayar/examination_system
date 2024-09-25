@@ -4,6 +4,7 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 import { validateAdmin } from "@/config/api-middleware";
+import { CustomNextApiRequest } from "@/utils/types";
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -35,7 +36,7 @@ const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: any) => {
 };
 
 const handler = async (
-  req: NextApiRequest & { files: any },
+  req: CustomNextApiRequest,
   res: NextApiResponse
 ) => {
   if (req.method === "POST") {
