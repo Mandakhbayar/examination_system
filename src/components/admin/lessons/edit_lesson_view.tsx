@@ -102,9 +102,9 @@ export default function EditLessonView({ lesson, onSave }: LessonCardProps) {
       return;
     }
     try {
-      await axiosInterceptorInstance.delete(`/admin/lessons/${lesson?.id}`, {
+      await axiosInterceptorInstance.delete(`/admin/lessons/`, {
         params: {
-          id: lesson?.id,
+          lessonId: lesson?.id,
         },
       });
       setMessage("Lesson Deleted Successfully");
@@ -183,11 +183,13 @@ export default function EditLessonView({ lesson, onSave }: LessonCardProps) {
             }}
           />
           <div className="flex gap-2">
-            <CustomButton
-              label="Delete"
-              styleType="danger"
-              onClick={handleOnDelete}
-            />
+            {lesson?.id && (
+              <CustomButton
+                label="Delete"
+                styleType="danger"
+                onClick={handleOnDelete}
+              />
+            )}
             <CustomButton label="Save" styleType="next" type="submit" />
           </div>
         </div>

@@ -35,10 +35,7 @@ const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: any) => {
   });
 };
 
-const handler = async (
-  req: CustomNextApiRequest,
-  res: NextApiResponse
-) => {
+const handler = async (req: CustomNextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     await runMiddleware(req, res, upload.fields([{ name: "image" }]));
 
@@ -75,12 +72,17 @@ const handler = async (
       res.status(500).json({ message: "Error inserting question", error });
     }
   } else if (req.method === "DELETE") {
-    const questionId = req.query.questionId;
-    if (!questionId) {
+    const lessonId = req.query.lessonId;
+    if (!lessonId) {
       return res.status(400).json({ message: "Question ID is required." });
     }
     try {
-      await pool.query("DELETE FROM questions WHERE id = ?", [questionId]);
+      await pool.query(
+        "DELETE FROM answers WHERE question_id IN (SELECT id FROM questions WHERE lesson_id = ?)",
+        [lessonId]
+      );
+      await pool.query("DELETE FROM questions WHERE lesson_id = ?", [lessonId]);
+      await pool.query("DELETE FROM lessons WHERE id = ?", [lessonId]);
       res.status(200).json({ message: "Question deleted successfully!" });
     } catch (error) {
       console.error("Error deleting question", error);

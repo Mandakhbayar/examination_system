@@ -155,6 +155,7 @@ const handler = async (
       return res.status(400).json({ message: "Question ID is required." });
     }
     try {
+      await pool.query("DELETE FROM answers WHERE question_id = ?", [questionId]);
       await pool.query("DELETE FROM questions WHERE id = ?", [questionId]);
       res.status(200).json({ message: "Question deleted successfully!" });
     } catch (error) {
