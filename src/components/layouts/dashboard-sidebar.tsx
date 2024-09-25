@@ -53,7 +53,7 @@ export default function DashboardSidebar({
 
   return (
     <div
-      className={`relative block h-full min-h-screen w-72 overflow-y-auto bg-gray-50 px-3 py-4 dark:bg-gray-800',
+      className={`relative block min-h-screen w-72 overflow-y-auto bg-gray-50 px-3 py-4 dark:bg-gray-800',
         ${className}`}
     >
       <ul className="space-y-2 font-medium mt-16">
