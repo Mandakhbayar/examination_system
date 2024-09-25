@@ -11,6 +11,6 @@ export const Constants = {
   PHONE_NUMBER_REGEX: "^\\d{8}$",
   PASSWORD_REGEX: "^.{8,}$",
   ACCESS_TOKEN_KEY: "ACCESS_TOKEN_KEY",
-  SECRET_KEY: "SECRET_KEY",
+  SECRET_KEY: "KEY",
   EXAM_DEFAULT_TIME: 600
 };
