@@ -51,10 +51,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
 
       const questionsMap: { [key: number]: Question } = {};
-      if (!Array.isArray(rows) || rows.length === 0) {
-        res.status(404).json({ error: "Question not found" });
-        return;
-      }
 
       (rows as QueryRow[]).forEach((row: QueryRow) => {
         if (!questionsMap[row.question_id]) {

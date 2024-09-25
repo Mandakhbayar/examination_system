@@ -3,6 +3,7 @@ import pool from "@/config/db";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
+import { validateAdmin } from "@/config/api-middleware";
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -33,17 +34,12 @@ const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: any) => {
   });
 };
 
-// API handler
-export default async function handler(
+const handler = async (
   req: NextApiRequest & { files: any },
   res: NextApiResponse
-) {
+) => {
   if (req.method === "POST") {
-    await runMiddleware(
-      req,
-      res,
-      upload.fields([{ name: "image" }])
-    );
+    await runMiddleware(req, res, upload.fields([{ name: "image" }]));
 
     const { id, title, description, image_url } = req.body;
 
@@ -93,10 +89,12 @@ export default async function handler(
     res.setHeader("Allow", ["POST, DELETE"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-}
+};
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+export default validateAdmin(handler);

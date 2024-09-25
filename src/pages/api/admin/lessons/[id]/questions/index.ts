@@ -4,6 +4,7 @@ import { Answer } from "@/utils/types";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
+import { validateAdmin } from "@/config/api-middleware";
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -34,11 +35,10 @@ const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: any) => {
   });
 };
 
-// API handler
-export default async function handler(
+const handler = async (
   req: NextApiRequest & { files: any },
   res: NextApiResponse
-) {
+) => {
   if (req.method === "POST") {
     const lessonId = req.query.id as string;
     await runMiddleware(
@@ -94,10 +94,7 @@ export default async function handler(
             isCorrect = answer.isCorrect ? 1 : 0;
           } else if (typeof answer.isCorrect === "string") {
             isCorrect =
-              answer.isCorrect === "1" ||
-              answer.isCorrect === "true"
-                ? 1
-                : 0;
+              answer.isCorrect === "1" || answer.isCorrect === "true" ? 1 : 0;
           } else {
             isCorrect = answer.isCorrect ? 1 : 0;
           }
@@ -117,7 +114,6 @@ export default async function handler(
 
         const questionId = (result as any).insertId;
 
-        
         let parsedAnswers: Answer[];
 
         if (typeof answers === "string") {
@@ -138,10 +134,7 @@ export default async function handler(
             isCorrect = answer.isCorrect ? 1 : 0;
           } else if (typeof answer.isCorrect === "string") {
             isCorrect =
-              answer.isCorrect === "1" ||
-              answer.isCorrect === "true"
-                ? 1
-                : 0;
+              answer.isCorrect === "1" || answer.isCorrect === "true" ? 1 : 0;
           } else {
             isCorrect = answer.isCorrect ? 1 : 0;
           }
@@ -172,10 +165,12 @@ export default async function handler(
     res.setHeader("Allow", ["POST, DELETE"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-}
+};
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+export default validateAdmin(handler);

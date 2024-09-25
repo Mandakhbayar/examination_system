@@ -54,13 +54,17 @@ const LessonsPage = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-black">Lessons</h1>
-      <CustomButton
-        onClick={() => {
-          router.push(Routes.admin.addLesson);
-        }}
-        type="button"
-        styleType="next"
-        label="Add Lesson"/>
+      <div className="mb-4 text-end">
+        <CustomButton
+          onClick={() => {
+            router.push(Routes.admin.addLesson);
+          }}
+          type="button"
+          styleType="next"
+          label="Add Lesson"
+        />
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {lessons.map((lesson) => (
           <LessonCard

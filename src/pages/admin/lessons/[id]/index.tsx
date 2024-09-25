@@ -37,22 +37,20 @@ const AdminQuestionsPage = () => {
 
       if (
         !res.data ||
-        !res.data.questions ||
-        res.data.questions == 0 ||
         !res.data.lesson
       ) {
         throw new Error(ErrorStrings.DATA_NOT_FOUND);
       }
-      setQuestions(res.data.questions);
+      setQuestions(res.data.questions ?? []);
       setLesson(res.data.lesson);
     } catch (error) {
       console.log(error);
       setDialog({
         type: "error",
         message: ErrorStrings.SERVER_INTERNAL_ERROR,
-        onClose: () => {
+        onComplete: () => {
           router.back();
-        },
+        }
       });
     }
     setIsLoading(false);
@@ -102,7 +100,8 @@ const AdminQuestionsPage = () => {
         <Dialog
           type={dialog.type ?? "error"}
           message={dialog.message}
-          onClose={() => setDialog(null)}
+          onClose={dialog.onClose}
+          onComplete={dialog.onComplete}
         />
       )}
 

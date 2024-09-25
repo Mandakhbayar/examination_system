@@ -39,7 +39,8 @@ export const validateToken = (
 };
 
 export const validateAdmin = (
-  handler: (req: CustomNextApiRequest, res: NextApiResponse) => void
+  handler: (req: CustomNextApiRequest & { files: any },
+    res: NextApiResponse) => void
 ) => {
   return async (req: CustomNextApiRequest, res: NextApiResponse) => {
     const token = req.headers.authorization?.split(" ")[1];

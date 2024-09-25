@@ -12,6 +12,7 @@ const buttonTypeStyles = {
   default: "bg-gray-300 hover:bg-gray-400 text-black",
   success: "bg-green-500 hover:bg-green-400 text-white",
   next: "bg-black hover:bg-gray-700 text-white",
+  danger: "bg-red-500 hover:bg-red-400 text-white",
   black: styles.submitButton,
   white: styles.secondButton,
 };

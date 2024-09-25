@@ -56,8 +56,8 @@ export type DialogType = "info" | "warning" | "error" | "success";
 export type DialogDetailType = {
   type: DialogType;
   message: string;
-  onClose: () => void;
+  onClose?: () => void;
   onComplete?: () => void;
 };
 
-export type ButtonType = "default" | "success" | "next" | "black" | "white";
+export type ButtonType = "default" | "success" | "next" | "black" | "white" | "danger";

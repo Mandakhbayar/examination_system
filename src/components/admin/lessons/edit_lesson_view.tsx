@@ -1,6 +1,6 @@
 import Alert from "@/components/ui/alert";
 import axiosInterceptorInstance from "@/config/api-interceptor";
-import { AlertType, Lesson } from "@/utils/types";
+import { AlertType, DialogDetailType, Lesson } from "@/utils/types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import styles from "@/styles/auth.module.css";
@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ErrorStrings } from "@/utils/strings";
 import { Constants } from "../../../utils/constants";
+import Dialog from "@/components/ui/dialog";
 
 interface LessonCardProps {
   lesson: Lesson | null;
@@ -16,7 +17,7 @@ interface LessonCardProps {
 }
 
 export default function EditLessonView({ lesson, onSave }: LessonCardProps) {
-  const { register, handleSubmit} = useForm<Lesson>({
+  const { register, handleSubmit } = useForm<Lesson>({
     defaultValues: {
       title: lesson?.title,
       description: lesson?.description,
@@ -24,6 +25,7 @@ export default function EditLessonView({ lesson, onSave }: LessonCardProps) {
   });
   const [message, setMessage] = useState<string | null>(null);
   const [alertType, setAlertType] = useState<AlertType | undefined>("error");
+  const [dialog, setDialog] = useState<DialogDetailType | null>(null);
   const router = useRouter();
   const [imageUrl, setImageUrl] = useState<string | null>(
     lesson?.image_url ?? null
@@ -92,6 +94,43 @@ export default function EditLessonView({ lesson, onSave }: LessonCardProps) {
     }
   };
 
+  const onDelete = async () => {
+    setMessage(null);
+    if (lesson?.id == null) {
+      setMessage("Lesson ID is required");
+      setAlertType("error");
+      return;
+    }
+    try {
+      await axiosInterceptorInstance.delete(`/admin/lessons/${lesson?.id}`, {
+        params: {
+          id: lesson?.id,
+        },
+      });
+      setMessage("Lesson Deleted Successfully");
+      setAlertType("success");
+      router.push("/admin/lessons");
+    } catch (error) {
+      console.error("Error updating lesson", error);
+      setMessage(ErrorStrings.SERVER_INTERNAL_ERROR);
+      setAlertType("error");
+    }
+  };
+
+  const handleOnDelete = () => {
+    setDialog({
+      type: "info",
+      message: "Are you sure you want to delete this lesson?",
+      onClose: () => {
+        setDialog(null);
+      },
+      onComplete: () => {
+        onDelete();
+        setDialog(null);
+      },
+    });
+  };
+
   return (
     <div className="container py-8 px-12 rounded-lg shadow-md h-min max-w-screen-md">
       {message && <Alert message={message} type={alertType} />}
@@ -115,7 +154,12 @@ export default function EditLessonView({ lesson, onSave }: LessonCardProps) {
         <div className="mb-4">
           <label className="block font-semibold mb-1">Upload Image</label>
           <div className="mb-4">
-            <input key={'image'} type="file" accept="image/*" onChange={handleImageChange} />
+            <input
+              key={"image"}
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
             {imageError && <p className="text-red-500">{imageError}</p>}
           </div>
           {imageUrl && (
@@ -130,7 +174,7 @@ export default function EditLessonView({ lesson, onSave }: LessonCardProps) {
             </div>
           )}
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-2">
           <CustomButton
             label="Cancel"
             styleType="default"
@@ -138,8 +182,23 @@ export default function EditLessonView({ lesson, onSave }: LessonCardProps) {
               router.back();
             }}
           />
-          <CustomButton label="Save" styleType="next" type="submit" />
+          <div className="flex gap-2">
+            <CustomButton
+              label="Delete"
+              styleType="danger"
+              onClick={handleOnDelete}
+            />
+            <CustomButton label="Save" styleType="next" type="submit" />
+          </div>
         </div>
+        {dialog && (
+          <Dialog
+            type={dialog.type ?? "error"}
+            message={dialog.message}
+            onClose={dialog.onClose}
+            onComplete={dialog.onComplete}
+          />
+        )}
       </form>
     </div>
   );
