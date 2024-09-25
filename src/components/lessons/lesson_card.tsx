@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Lesson } from "../../utils/types";
 import Image from "next/image";
+import { Constants } from "@/utils/constants";
 
 export default function LessonCard({ lesson, href }: { lesson: Lesson, href: string }) {
   return (
@@ -11,7 +12,7 @@ export default function LessonCard({ lesson, href }: { lesson: Lesson, href: str
       >
         <div className="w-full h-60 object-cover relative">
           <Image
-            src={lesson.image_url}
+            src={lesson.image_url ?? Constants.DEFAULT_IMAGE}
             alt={lesson.title}
             layout="fill"
             objectFit="cover"

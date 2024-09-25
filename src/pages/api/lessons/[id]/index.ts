@@ -62,7 +62,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     (rows as QueryRow[]).forEach((row: QueryRow) => {
       if (!questionsMap[row.question_id]) {
         questionsMap[row.question_id] = {
-          id: row.question_id,
+          id: row.question_id.toString(),
           text: row.question_text,
           image: row.question_image,
           video: row.question_video,
@@ -71,7 +71,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         };
       }
       questionsMap[row.question_id].answers.push({
-        id: row.answer_id,
+        id: row.answer_id.toString(),
         text: row.answer_text,
         isCorrect: row.is_correct,
       });

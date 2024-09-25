@@ -12,11 +12,11 @@ export default function QuestionCard({
   question: Question;
   index: number;
   selectFunction: (
-    questionId: number,
-    answerId: number,
+    questionId: string,
+    answerId: string,
     isCorrect: boolean
   ) => void;
-  isAnswerSelectedFunction: (questionId: number, answerId: number) => boolean;
+  isAnswerSelectedFunction: (questionId: string, answerId: string) => boolean;
   status: PageStatusType;
 }) {
   return (

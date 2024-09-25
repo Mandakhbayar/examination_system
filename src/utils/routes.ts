@@ -15,5 +15,6 @@ export const Routes = {
     userDetail: (id: number) => `/admin/users/${id}`,
     lessons: "/admin/lessons",
     lessonDetail: (id: string) => `/admin/lessons/${id}`,
+    addLesson: "/admin/lessons/add",
   },
 };

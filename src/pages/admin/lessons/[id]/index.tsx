@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactElement } from "react";
 import { DialogDetailType, Lesson, Question } from "@/utils/types";
 import axiosInterceptorInstance from "@/config/api-interceptor";
 import QuestionRow from "@/components/admin/lessons/question_row";
@@ -8,8 +8,10 @@ import { useRouter } from "next/navigation";
 import { ErrorStrings } from "@/utils/strings";
 import CustomButton from "@/components/ui/button";
 import EditQuestionModal from "@/components/admin/lessons/edit_question_modal";
+import EditLessonView from "@/components/admin/lessons/edit_lesson_view";
+import DashboardSidebar from "@/components/layouts/dashboard-sidebar";
 
-export default function AdminQuestionsPage() {
+const AdminQuestionsPage = () => {
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -94,7 +96,8 @@ export default function AdminQuestionsPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6 text-black">Manage Questions</h1>
+      <EditLessonView lesson={lesson as Lesson} />
+      <h1 className="text-2xl font-bold mb-6 text-black mt-10">Manage Questions</h1>
       {dialog && (
         <Dialog
           type={dialog.type ?? "error"}
@@ -111,7 +114,6 @@ export default function AdminQuestionsPage() {
         />
       </div>
 
-      {/* Question Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
@@ -146,3 +148,13 @@ export default function AdminQuestionsPage() {
     </div>
   );
 }
+
+AdminQuestionsPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <div className="flex">
+      <DashboardSidebar className="w-1/5" />
+      <div className="w-4/5">{page}</div>
+    </div>
+  );
+};
+export default AdminQuestionsPage

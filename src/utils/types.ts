@@ -25,11 +25,11 @@ export interface Lesson {
   id: string;
   title: string;
   description: string;
-  image_url: string;
+  image_url?: string;
 }
 
 export type Answer = {
-  id?: string;
+  id: string;
   text: string;
   isCorrect: boolean;
 };
@@ -47,8 +47,8 @@ export type Question = {
 export type PageStatusType = "start" | "pending" | "finished";
 
 export interface SelectedAnswer {
-  questionId: number;
-  answerId: number;
+  questionId: string;
+  answerId: string;
 }
 
 export type DialogType = "info" | "warning" | "error" | "success";

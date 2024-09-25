@@ -50,10 +50,10 @@ export default async function handler(
     const { id, text, answers } = req.body;
 
     // Validating the required fields
-    if (!text || !answers) {
+    if (!answers) {
       return res
         .status(400)
-        .json({ message: "Question text and answers are required." });
+        .json({ message: "Question answers are required." });
     }
 
     // Collecting file paths for media
@@ -169,7 +169,7 @@ export default async function handler(
       res.status(500).json({ message: "Error deleting question", error });
     }
   } else {
-    res.setHeader("Allow", ["POST"]);
+    res.setHeader("Allow", ["POST, DELETE"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

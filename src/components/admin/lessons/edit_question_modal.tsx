@@ -5,9 +5,10 @@ import CustomButton from "@/components/ui/button";
 import { useState } from "react";
 import Alert from "@/components/ui/alert";
 import { ErrorStrings } from "@/utils/strings";
+import styles from '@/styles/auth.module.css';
 
 interface EditQuestionModalProps {
-  id: string;
+  id?: string;
   question?: Question;
   onClose: () => void;
   fetchData: () => void;
@@ -105,30 +106,26 @@ export default function EditQuestionModal({
             <label className="block font-semibold mb-1">Question Text</label>
             <input
               type="text"
+              className={`${styles.input}`}
               {...register("text", { required: true })}
-              className="border p-2 w-full"
             />
           </div>
 
-          {/* Image Upload */}
           <div className="mb-4">
             <label className="block font-semibold mb-1">Upload Image</label>
             <input type="file" {...register("image")} />
           </div>
 
-          {/* Video Upload */}
           <div className="mb-4">
             <label className="block font-semibold mb-1">Upload Video</label>
             <input type="file" {...register("video")} />
           </div>
 
-          {/* Audio Upload */}
           <div className="mb-4">
             <label className="block font-semibold mb-1">Upload Audio</label>
             <input type="file" {...register("audio")} />
           </div>
 
-          {/* Answers with isCorrect Radio Button */}
           <div className="mb-4">
             <label className="block font-semibold mb-1">Answers</label>
             {Array(4)
@@ -142,8 +139,8 @@ export default function EditQuestionModal({
                     <input
                       type="text"
                       placeholder={`Answer ${index + 1}`}
+                      className={`${styles.input}`}
                       {...register(`answers.${index}.text` as const)}
-                      className="border p-2 w-full mr-2"
                     />
                     {errors.answers && errors.answers[index] && (
                       <p className="text-red-500">
