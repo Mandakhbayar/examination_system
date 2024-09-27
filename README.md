@@ -13,5 +13,5 @@ npm run start
 ```
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-SQL dump: public/static/examination_system.sql
+SQL dump: https://github.com/Mandakhbayar/examination_system/blob/main/public/static/examination_system.sql
 
